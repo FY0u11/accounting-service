@@ -1,0 +1,24 @@
+/* @import '../../node_modules/materialize-css/dist/css/materialize.min.css'; */
+
+:root {
+  --primary-color: #673ab7;
+  --dark-primary-color: #512da8;
+  --light-primary-color: #d1c4e9;
+  --primary-text: #212121;
+  --secondary-text: #757575;
+  --accent-color: #ff5722;
+  --text: white;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: white;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}

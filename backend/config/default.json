@@ -1,0 +1,9 @@
+{
+    "dbConnect": "mongodb+srv://devUser:1234qwer@cluster0.qx97r.mongodb.net/work-project?retryWrites=true&w=majority",
+    "dbOptions": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true,
+        "useCreateIndex": true
+    },
+    "port": 3030
+}

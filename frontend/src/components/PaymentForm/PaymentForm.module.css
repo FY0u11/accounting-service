@@ -1,0 +1,9 @@
+.container {
+  margin: 1rem 0;
+  width: 300px;
+}
+
+.container input[type='text'] {
+  padding: 1rem;
+  width: 100%;
+}

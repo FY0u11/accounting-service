@@ -1,0 +1,41 @@
+.container {
+  margin: 0 auto;
+  padding: 0 2rem;
+  background: rgb(255, 255, 255);
+
+  border-radius: 12px;
+}
+
+.table {
+  border-collapse: separate;
+  width: 100%;
+  border-spacing: 0 0.6rem;
+}
+
+.tbody tr {
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.table td,
+.table th {
+  padding: 0.6rem;
+}
+
+.thead {
+  color: var(--secondary-text);
+}
+
+.tbody td {
+  color: var(--primary-text);
+}
+
+.tbody td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.tbody td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
