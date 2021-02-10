@@ -4,6 +4,8 @@ import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
 import { useLanguage } from '../../hooks/useLanguage'
+import Button from '../Button/Button'
+import DeleteModal from '../DeleteModal/DeleteModal'
 
 const DetailsTable = ({ payments, setPayments }) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
@@ -54,22 +56,11 @@ const DetailsTable = ({ payments, setPayments }) => {
 
   return (
     <div className={styles.container}>
-      {isModalOpened ? (
-        <ModalWindow
-          setIsModalOpened={setIsModalOpened}
-          title={lang.CONFIRM_DELETE}
-        >
-          <div style={{ width: '300px' }}>
-            <button
-              onClick={() => deleteHandler()}
-              style={{ margin: '1rem 1rem 0 0' }}
-            >
-              {lang.YES}
-            </button>
-            <button onClick={() => setIsModalOpened(false)}>{lang.NO}</button>
-          </div>
-        </ModalWindow>
-      ) : null}
+      <DeleteModal
+        isModalOpened={isModalOpened}
+        setIsModalOpened={setIsModalOpened}
+        deleteHandler={deleteHandler}
+      />
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
