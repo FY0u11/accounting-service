@@ -3,26 +3,25 @@ import ModalWindow from '../ModalWindow/ModalWindow'
 import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
-
-const tableHeaders = {
-  time: 'Время',
-  type: 'Тип',
-  value: 'Платеж'
-}
-
-const paymentTypes = {
-  cash: 'Наличный расчет',
-  bank: 'Безналичный расчет',
-  card: 'Оплата по карте',
-  kaspi: 'Оплата на Kaspi Gold'
-}
+import { useLanguage } from '../../hooks/useLanguage'
 
 const DetailsTable = ({ payments, setPayments }) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const [deleteCandidate, setDeleteCandidate] = useState(null)
   const [sorting, setSorting] = useState({ by: 'time', as: 1 })
   const [sortedPayments, setSortedPayments] = useState(payments)
-
+  const { lang } = useLanguage()
+  const paymentTypes = {
+    cash: lang.CASH,
+    bank: lang.BANK,
+    card: lang.CARD,
+    kaspi: lang.KASPI
+  }
+  const tableHeaders = {
+    time: lang.TIME,
+    value: lang.PAYMENT,
+    type: lang.TYPE
+  }
   useEffect(() => {
     setSortedPayments(payments)
   }, [payments])
@@ -58,16 +57,16 @@ const DetailsTable = ({ payments, setPayments }) => {
       {isModalOpened ? (
         <ModalWindow
           setIsModalOpened={setIsModalOpened}
-          title="Действительно удалить?"
+          title={lang.CONFIRM_DELETE}
         >
           <div style={{ width: '300px' }}>
             <button
               onClick={() => deleteHandler()}
               style={{ margin: '1rem 1rem 0 0' }}
             >
-              Да
+              {lang.YES}
             </button>
-            <button onClick={() => setIsModalOpened(false)}>Нет</button>
+            <button onClick={() => setIsModalOpened(false)}>{lang.NO}</button>
           </div>
         </ModalWindow>
       ) : null}
@@ -89,7 +88,7 @@ const DetailsTable = ({ payments, setPayments }) => {
             })}
             <th>
               <SortingHeader sorting={{}} setSorting={() => {}} by={null}>
-                Действия
+                {lang.ACTIONS}
               </SortingHeader>
             </th>
           </tr>
@@ -99,10 +98,10 @@ const DetailsTable = ({ payments, setPayments }) => {
             return (
               <tr key={i}>
                 <td>
-                  {new Date(Date.parse(payment.time)).toLocaleTimeString()}
+                  {new Date(Date.parse(payment.time)).toLocaleString('ru')}
                 </td>
+                <td>{payment.value ? payment.value.toLocaleString() : '-'}</td>
                 <td>{paymentTypes[payment.type]}</td>
-                <td>{payment.value.toLocaleString()}</td>
                 <td>
                   <Close
                     onClick={() => openDeleteModal(payment.time)}
@@ -112,19 +111,15 @@ const DetailsTable = ({ payments, setPayments }) => {
               </tr>
             )
           })}
-          {/* <tr className={styles.total_by}>
-            <td>Итого: </td>
-            {['cash', 'bank', 'card', 'kaspi'].map(i => {
-              return (
-                <td key={i + 'total'}>
-                  {selectedPayments
-                    .reduce((acc, payment) => (acc += payment[i]), 0)
-                    .toLocaleString()
-                    .replace(/^0$/, '-')}
-                </td>
-              )
-            })}
-          </tr> */}
+          <tr className={styles.total_by}>
+            <td>{lang.TOTAL}</td>
+            <td>
+              {sortedPayments
+                .reduce((acc, payment) => (acc += payment.value), 0)
+                .toLocaleString()
+                .replace(/^0$/, '-')}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

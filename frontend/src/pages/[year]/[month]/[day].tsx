@@ -1,45 +1,17 @@
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import DetailsTable from '../../../components/DetailsTable/DetailsTable'
-import DetailsLayout from '../../../components/Layouts/DetailsLayout/DetailsLayout'
+import DetailsLayout from '../../../components/Layout/Layout'
+import DetailsHeader from '../../../components/PageHeaders/DetailsHeader/DetailsHeader'
+import { useLanguage } from '../../../hooks/useLanguage'
+import { usePayments } from '../../../hooks/usePayments'
 
 const DayDetails = () => {
-  const [payments, setPayments] = useState([])
-  const router = useRouter()
-
-  useEffect(() => {
-    ;(async () => {
-      const { day, month, year } = router.query
-      if (!day || !month || !year) return
-      try {
-        const response = await fetch(
-          `http://localhost:3030?filter=${month}.${day}.${year}`
-        )
-        const payments = await response.json()
-        setPayments(payments)
-      } catch (e) {
-        console.log(e.message)
-      }
-    })()
-  }, [router])
-
-  const addPaymentHandler = async payment => {
-    try {
-      await fetch('http://localhost:3030', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payment)
-      })
-      setPayments([...payments, payment])
-    } catch (e) {
-      console.log(e.message)
-    }
-  }
-
+  const { payments, setPayments, addPaymentHandler } = usePayments('day')
+  const { lang } = useLanguage()
   return (
-    <DetailsLayout addPaymentHandler={addPaymentHandler}>
+    <DetailsLayout
+      title={lang.DOCUMENT_TITLE_DETAILS}
+      HeaderComponent={<DetailsHeader addPaymentHandler={addPaymentHandler} />}
+    >
       <DetailsTable payments={payments} setPayments={setPayments} />
     </DetailsLayout>
   )

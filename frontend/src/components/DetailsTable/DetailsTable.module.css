@@ -39,3 +39,12 @@
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
+.total_by {
+  box-shadow: none !important;
+}
+
+.tbody tr:last-child td {
+  color: var(--accent-color);
+  font-weight: 600;
+}

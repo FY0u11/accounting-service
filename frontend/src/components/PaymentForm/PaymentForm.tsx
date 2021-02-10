@@ -1,11 +1,13 @@
-import { ViewDayTwoTone } from '@material-ui/icons'
 import { useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
+import Button from '../Button/Button'
 import styles from './PaymentForm.module.css'
 import RadioInput from './RadioInput/RadioInput'
 
 const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
   const [type, setType] = useState('cash')
   const [value, setValue] = useState('')
+  const { lang } = useLanguage()
 
   const onClickHandler = e => {
     e.preventDefault()
@@ -17,7 +19,7 @@ const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
     <form className={styles.container}>
       <input
         type="text"
-        placeholder="Введите оплату"
+        placeholder={lang.INPUT_PAYMENT}
         id="payment"
         value={value}
         onChange={e => setValue(e.target.value)}
@@ -30,7 +32,7 @@ const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
           type={type}
           setType={setType}
         >
-          Наличный расчет
+          {lang.CASH}
         </RadioInput>
         <RadioInput
           group="radio"
@@ -39,7 +41,7 @@ const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
           type={type}
           setType={setType}
         >
-          Безналичный расчет
+          {lang.BANK}
         </RadioInput>
         <RadioInput
           group="radio"
@@ -48,7 +50,7 @@ const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
           type={type}
           setType={setType}
         >
-          Оплата по карте
+          {lang.CARD}
         </RadioInput>
         <RadioInput
           group="radio"
@@ -57,16 +59,18 @@ const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
           type={type}
           setType={setType}
         >
-          Kaspi Gold
+          {lang.KASPI}
         </RadioInput>
       </div>
 
-      <button
+      <Button
         onClick={e => onClickHandler(e)}
-        disabled={!value || /[^0-9]+/.test(value)}
+        disabled={
+          isNaN(+value) || +value <= 0 || +value > 10e7 || value.length > 9
+        }
       >
-        Внести
-      </button>
+        {lang.ADD_PAYMENT}
+      </Button>
     </form>
   )
 }
