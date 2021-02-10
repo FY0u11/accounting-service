@@ -1,6 +1,18 @@
-import styles from './CustomSelect.module.css'
+// import styles from './CustomSelect.module.css'
 
-const CustomSelect = ({ onChangeHandler, values, selectedValue, title }) => {
+type CustomSelectProps = {
+  onChangeHandler: (value: string) => void
+  values: string[]
+  selectedValue: string
+  title: string
+}
+
+const CustomSelect = ({
+  onChangeHandler,
+  values,
+  selectedValue,
+  title
+}: CustomSelectProps) => {
   return (
     <>
       {selectedValue ? (

@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react'
-import ModalWindow from '../ModalWindow/ModalWindow'
 import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
 import { useLanguage } from '../../hooks/useLanguage'
-import Button from '../Button/Button'
 import DeleteModal from '../DeleteModal/DeleteModal'
+import { Types } from '../../types'
 
-const DetailsTable = ({ payments, setPayments }) => {
+type DetailsTableProps = {
+  payments: Types.Payment[]
+  setPayments: Types.SetState<Types.Payment[]>
+}
+
+const DetailsTable = ({ payments, setPayments }: DetailsTableProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
-  const [deleteCandidate, setDeleteCandidate] = useState(null)
-  const [sorting, setSorting] = useState({ by: 'time', as: 1 })
+  const [deleteCandidate, setDeleteCandidate] = useState('')
+  const [sorting, setSorting] = useState({
+    by: 'time',
+    as: 1
+  } as Types.Sorting)
   const [sortedPayments, setSortedPayments] = useState(payments)
   const { lang } = useLanguage()
   const paymentTypes = {
@@ -31,26 +38,30 @@ const DetailsTable = ({ payments, setPayments }) => {
   useEffect(() => {
     setSortedPayments(
       [...payments].sort((p1, p2) =>
-        p1[sorting.by] < p2[sorting.by] ? sorting.as : -sorting.as
+        p1[sorting.by as keyof Types.Payment] <
+        p2[sorting.by as keyof Types.Payment]
+          ? sorting.as
+          : -sorting.as
       )
     )
   }, [sorting])
 
   const deleteHandler = async () => {
     try {
+      console.log(deleteCandidate)
       await fetch(`http://localhost:3030/${deleteCandidate}`, {
         method: 'delete'
       })
-      setPayments(payments.filter(p => p.time !== deleteCandidate))
-      setDeleteCandidate(null)
+      setPayments(payments.filter(p => p._id !== deleteCandidate))
+      setDeleteCandidate('')
       setIsModalOpened(false)
     } catch (e) {
       console.log(e.message)
     }
   }
 
-  const openDeleteModal = time => {
-    setDeleteCandidate(time)
+  const openDeleteModal = (_id: string) => {
+    setDeleteCandidate(_id)
     setIsModalOpened(true)
   }
 
@@ -64,7 +75,7 @@ const DetailsTable = ({ payments, setPayments }) => {
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            {Object.keys(tableHeaders).map((type, i) => {
+            {Object.keys(tableHeaders).map(type => {
               return (
                 <th key={type + 'header'}>
                   <SortingHeader
@@ -72,15 +83,13 @@ const DetailsTable = ({ payments, setPayments }) => {
                     setSorting={setSorting}
                     by={type}
                   >
-                    {tableHeaders[type]}
+                    {tableHeaders[type as keyof typeof tableHeaders]}
                   </SortingHeader>
                 </th>
               )
             })}
             <th>
-              <SortingHeader sorting={{}} setSorting={() => {}} by={null}>
-                {lang.ACTIONS}
-              </SortingHeader>
+              <SortingHeader>{lang.ACTIONS}</SortingHeader>
             </th>
           </tr>
         </thead>
@@ -95,7 +104,7 @@ const DetailsTable = ({ payments, setPayments }) => {
                 <td>{paymentTypes[payment.type]}</td>
                 <td>
                   <Close
-                    onClick={() => openDeleteModal(payment.time)}
+                    onClick={() => openDeleteModal(payment._id)}
                     style={{ cursor: 'pointer', color: 'red', display: 'flex' }}
                   />
                 </td>

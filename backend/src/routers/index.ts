@@ -7,6 +7,6 @@ const router = Router()
 
 router.get('/', getPaymentsController)
 router.post('/', addPaymentController)
-router.delete('/:time', deletePaymentController)
+router.delete('/:id', deletePaymentController)
 
 export default router

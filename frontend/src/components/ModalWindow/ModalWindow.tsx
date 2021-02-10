@@ -1,7 +1,18 @@
 import styles from './ModalWindow.module.css'
 import { Close } from '@material-ui/icons'
+import { Types } from '../../types'
 
-const ModalWindow = ({ setIsModalOpened, title, children }) => {
+type ModalWindowProps = {
+  setIsModalOpened: Types.SetState<boolean>
+  title: string
+  children: React.ReactNode
+}
+
+const ModalWindow = ({
+  setIsModalOpened,
+  title,
+  children
+}: ModalWindowProps) => {
   return (
     <div
       className={styles.container}

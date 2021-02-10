@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Types } from '../types'
+
 import { useAddPaymentHandler } from './useAddPaymentHandler'
 import { useLoadAllPayments } from './useLoadAllPayments'
 import { useLoadDayPayments } from './useLoadDayPayments'
 
-export const usePayments = (type: Types.PaymentsHook = 'all') => {
-  const [payments, setPayments] = useState([])
+export const usePayments = (type: Types.UsePaymentsTypes = 'all') => {
+  const [payments, setPayments] = useState([] as Types.Payment[])
 
   switch (type) {
     case 'all':

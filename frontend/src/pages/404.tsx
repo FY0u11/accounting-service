@@ -1,5 +1,6 @@
 import Layout from '../components/Layout/Layout'
 import { useLanguage } from '../hooks/useLanguage'
+import React from 'react'
 
 const NotFound = () => {
   const { lang } = useLanguage()

@@ -4,10 +4,11 @@ import SummaryTable from '../components/SummaryTable/SummaryTable'
 import MainHeader from '../components/PageHeaders/MainHeader/MainHeader'
 import { usePayments } from '../hooks/usePayments'
 import { useLanguage } from '../hooks/useLanguage'
+import React from 'react'
 
 const HomePage = () => {
-  const [months, setMonths] = useState([])
-  const [years, setYears] = useState([])
+  const [months, setMonths] = useState([] as string[])
+  const [years, setYears] = useState([] as string[])
   const [selectedMonth, setSelectedMonth] = useState('')
   const [selectedYear, setSelectedYear] = useState('')
   const { payments, addPaymentHandler } = usePayments()

@@ -3,6 +3,7 @@ import DetailsLayout from '../../../components/Layout/Layout'
 import DetailsHeader from '../../../components/PageHeaders/DetailsHeader/DetailsHeader'
 import { useLanguage } from '../../../hooks/useLanguage'
 import { usePayments } from '../../../hooks/usePayments'
+import React from 'react'
 
 const DayDetails = () => {
   const { payments, setPayments, addPaymentHandler } = usePayments('day')

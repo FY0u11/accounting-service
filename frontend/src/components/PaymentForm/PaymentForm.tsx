@@ -1,18 +1,23 @@
-import { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { useLanguage } from '../../hooks/useLanguage'
+import { Types } from '../../types'
 import Button from '../Button/Button'
 import styles from './PaymentForm.module.css'
 import RadioInput from './RadioInput/RadioInput'
 
-const PaymentForm = ({ addPaymentHandler, setIsModalOpened }) => {
-  const [type, setType] = useState('cash')
+type PaymentFormProps = {
+  addPaymentHandler: (payment: Types.PaymentForCreate) => void
+}
+
+const PaymentForm = ({ addPaymentHandler }: PaymentFormProps) => {
+  const [type, setType] = useState('cash' as Types.PaymentTypes)
   const [value, setValue] = useState('')
   const { lang } = useLanguage()
 
-  const onClickHandler = e => {
+  const onClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setValue('')
-    addPaymentHandler({ value: +value, type, time: new Date() })
+    addPaymentHandler({ value: +value, type })
   }
 
   return (

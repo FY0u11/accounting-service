@@ -1,9 +1,20 @@
 import { useLanguage } from '../../hooks/useLanguage'
+import { Types } from '../../types'
 import Button from '../Button/Button'
 import ModalWindow from '../ModalWindow/ModalWindow'
 import styles from './DeleteModal.module.css'
 
-const DeleteModal = ({ isModalOpened, setIsModalOpened, deleteHandler }) => {
+type DeleteModalProps = {
+  isModalOpened: boolean
+  setIsModalOpened: Types.SetState<boolean>
+  deleteHandler: () => void
+}
+
+const DeleteModal = ({
+  isModalOpened,
+  setIsModalOpened,
+  deleteHandler
+}: DeleteModalProps) => {
   const { lang } = useLanguage()
   return (
     <>

@@ -3,16 +3,19 @@ import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './SummaryTable.module.css'
 import Link from 'next/link'
 import { useLanguage } from '../../hooks/useLanguage'
+import { Types } from '../../types'
 
-// TODO: remove these types to somewhere else
-type PaymentType = {
-  cash: number
-  card: number
-  bank: number
-  kaspi: number
-  total: number
+type YearsMapType = Map<number, Map<string, Map<number, Types.SummaryPayment>>>
+
+type SummaryTableProps = {
+  payments: Types.Payment[]
+  setMonths: Types.SetState<string[]>
+  setYears: Types.SetState<string[]>
+  selectedMonth: string
+  selectedYear: string
+  setSelectedMonth: Types.SetState<string>
+  setSelectedYear: Types.SetState<string>
 }
-type YearsMapType = Map<number, Map<string, Map<number, PaymentType>>>
 
 const SummaryTable = ({
   payments,
@@ -22,10 +25,12 @@ const SummaryTable = ({
   selectedYear,
   setSelectedMonth,
   setSelectedYear
-}) => {
+}: SummaryTableProps) => {
   const [sorting, setSorting] = useState({ by: 'day', as: 1 })
   const [paymentsMap, setPaymentsMap] = useState(new Map())
-  const [selectedPayments, setSelectedPayments] = useState([])
+  const [selectedPayments, setSelectedPayments] = useState(
+    [] as Types.SummaryPayment[]
+  )
   const { lang } = useLanguage()
   const tableHeaders = {
     day: lang.DATE,
@@ -36,9 +41,12 @@ const SummaryTable = ({
     total: lang.TOTAL
   }
 
-  const sort = array => {
+  const sort = (array: Types.SummaryPayment[]) => {
     array.sort((p1, p2) =>
-      p1[sorting.by] < p2[sorting.by] ? sorting.as : -sorting.as
+      p1[sorting.by as keyof Types.SummaryPayment] <
+      p2[sorting.by as keyof Types.SummaryPayment]
+        ? sorting.as
+        : -sorting.as
     )
   }
 
@@ -56,7 +64,7 @@ const SummaryTable = ({
         daysMap = new Map()
         monthsMap.set(dt.toLocaleString('ru', { month: 'long' }), daysMap)
       }
-      let day = daysMap.get(dt.getDate())
+      const day = daysMap.get(dt.getDate())
       if (day) {
         day[payment.type] += payment.value
         day.total += payment.value
@@ -77,12 +85,12 @@ const SummaryTable = ({
     })
     setPaymentsMap(yearsMap)
     const years = Array.from(yearsMap.keys())
-    const months = Array.from(yearsMap.get(Math.max(...years)).keys())
+    const months = Array.from(yearsMap.get(Math.max(...years))?.keys() ?? [])
     if (!selectedMonth && !selectedYear) {
       setMonths(months)
-      setYears(years.sort((a, b) => a - b))
+      setYears(years.sort((a, b) => a - b).map(v => '' + v))
       setSelectedMonth(months[months.length - 1])
-      setSelectedYear(Math.max(...years))
+      setSelectedYear('' + Math.max(...years))
     }
   }, [payments])
 
@@ -95,7 +103,7 @@ const SummaryTable = ({
         .get(+selectedYear)
         .get(selectedMonth)
         .values()
-    )
+    ) as Types.SummaryPayment[]
     sort(sPayments)
     setSelectedPayments(sPayments)
   }, [selectedMonth])
@@ -104,9 +112,7 @@ const SummaryTable = ({
     if (!selectedYear) {
       return
     }
-    const months: Array<number> = Array.from(
-      paymentsMap.get(+selectedYear).keys()
-    )
+    const months: string[] = Array.from(paymentsMap.get(+selectedYear).keys())
     setMonths(months)
     setSelectedMonth(months[months.length - 1])
     const sPayments = Array.from(
@@ -114,7 +120,7 @@ const SummaryTable = ({
         .get(+selectedYear)
         .get(months[months.length - 1])
         .values()
-    )
+    ) as Types.SummaryPayment[]
     sort(sPayments)
     setSelectedPayments(sPayments)
   }, [selectedYear])
@@ -126,7 +132,7 @@ const SummaryTable = ({
         .get(+selectedYear)
         .get(selectedMonth)
         .values()
-    )
+    ) as Types.SummaryPayment[]
     sort(sPayments)
     setSelectedPayments(sPayments)
   }, [paymentsMap])
@@ -134,7 +140,10 @@ const SummaryTable = ({
   useEffect(() => {
     setSelectedPayments(
       [...selectedPayments].sort((p1, p2) =>
-        p1[sorting.by] < p2[sorting.by] ? sorting.as : -sorting.as
+        p1[sorting.by as keyof Types.SummaryPayment] <
+        p2[sorting.by as keyof Types.SummaryPayment]
+          ? sorting.as
+          : -sorting.as
       )
     )
   }, [sorting])
@@ -144,7 +153,7 @@ const SummaryTable = ({
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            {Object.keys(tableHeaders).map((type, i) => {
+            {Object.keys(tableHeaders).map(type => {
               return (
                 <th key={type + 'header'}>
                   <SortingHeader
@@ -152,7 +161,7 @@ const SummaryTable = ({
                     setSorting={setSorting}
                     by={type}
                   >
-                    {tableHeaders[type]}
+                    {tableHeaders[type as keyof typeof tableHeaders]}
                   </SortingHeader>
                 </th>
               )
@@ -168,7 +177,7 @@ const SummaryTable = ({
               >
                 <tr
                   className={
-                    new Date().getDate() === payment.day ? styles.today : null
+                    new Date().getDate() === payment.day ? styles.today : ''
                   }
                 >
                   <td>{payment.day}</td>
@@ -191,7 +200,11 @@ const SummaryTable = ({
               return (
                 <td key={i + 'total'}>
                   {selectedPayments
-                    .reduce((acc, payment) => (acc += payment[i]), 0)
+                    .reduce(
+                      (acc, payment) =>
+                        (acc += payment[i as keyof typeof payment]),
+                      0
+                    )
                     .toLocaleString()
                     .replace(/^0$/, '-')}
                 </td>

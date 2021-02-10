@@ -1,6 +1,25 @@
-import styles from './RadioInput.module.css'
+// import styles from './RadioInput.module.css'
 
-const RadioInput = ({ type, value, setType, group, id, children, ...rest }) => {
+import { Types } from '../../../types'
+
+type RadioInputProps = {
+  type: string
+  value: Types.PaymentTypes
+  setType: Types.SetState<Types.PaymentTypes>
+  group: string
+  id: string
+  children: React.ReactNode
+}
+
+const RadioInput = ({
+  type,
+  value,
+  setType,
+  group,
+  id,
+  children,
+  ...rest
+}: RadioInputProps) => {
   return (
     <p>
       <label htmlFor={id}>

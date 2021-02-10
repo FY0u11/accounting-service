@@ -1,10 +1,13 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { Types } from '../types'
 
-export const useLoadDayPayments = setPayments => {
+export const useLoadDayPayments = (
+  setPayments: Types.SetState<Types.Payment[]>
+) => {
   const router = useRouter()
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const { day, month, year } = router.query
       if (!day || !month || !year) return
       try {
