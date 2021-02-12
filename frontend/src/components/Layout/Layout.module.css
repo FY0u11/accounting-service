@@ -4,12 +4,14 @@
   min-height: 100vh;
   justify-content: space-between;
   padding: 0 2rem 2rem 2rem;
+  position: relative;
 }
 
 .header {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 2rem 0;
   background: white;
 }
 
@@ -18,7 +20,7 @@
 }
 
 .main {
-  margin-top: 5rem;
+  margin-top: 7rem;
 }
 
 .footer {

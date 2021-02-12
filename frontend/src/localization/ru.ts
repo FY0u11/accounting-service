@@ -24,5 +24,6 @@ export default {
   INPUT_PAYMENT: 'Введите оплату',
   ADD_PAYMENT: 'Внести',
   MODAL_ADD_PAYMENT: 'Добавить оплату',
-  BACK: 'Назад'
+  BACK: 'Назад',
+  DAY: 'День'
 }

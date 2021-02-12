@@ -48,3 +48,12 @@
   color: var(--accent-color);
   font-weight: 600;
 }
+
+.close_icon {
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}

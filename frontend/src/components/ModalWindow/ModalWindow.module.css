@@ -11,7 +11,7 @@
 }
 
 .inner_container {
-  background: #eee;
+  background: #fff;
   padding: 2rem;
   border-radius: 12px;
   margin: 0 auto;
@@ -24,4 +24,6 @@
 .header {
   display: flex;
   justify-content: space-between;
+  color: var(--accent-color);
+  font-weight: 600;
 }

@@ -5,5 +5,6 @@
         "useUnifiedTopology": true,
         "useCreateIndex": true
     },
-    "port": 3030
+    "port": 3030,
+    "tokenSecret": "Some very very secret json web token string that cannot be unsecreted"
 }

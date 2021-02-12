@@ -12,7 +12,7 @@ type SortingHeaderProps = {
 const SortingHeader = ({
   sorting = { by: '', as: 1 },
   setSorting,
-  by = '',
+  by = '_',
   children
 }: SortingHeaderProps) => {
   return (

@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
 import { useLanguage } from '../../hooks/useLanguage'
 import DeleteModal from '../DeleteModal/DeleteModal'
 import { Types } from '../../types'
+import { AppContext } from '../../context/AppContext'
+import { usePayments } from '../../hooks/usePayments'
 
-type DetailsTableProps = {
-  payments: Types.Payment[]
-  setPayments: Types.SetState<Types.Payment[]>
-}
-
-const DetailsTable = ({ payments, setPayments }: DetailsTableProps) => {
+const DetailsTable = () => {
   const [isModalOpened, setIsModalOpened] = useState(false)
+  const { payments, setPayments, token } = useContext(AppContext)
+  usePayments('day')
   const [deleteCandidate, setDeleteCandidate] = useState('')
   const [sorting, setSorting] = useState({
     by: 'time',
@@ -48,9 +47,11 @@ const DetailsTable = ({ payments, setPayments }: DetailsTableProps) => {
 
   const deleteHandler = async () => {
     try {
-      console.log(deleteCandidate)
       await fetch(`http://localhost:3030/${deleteCandidate}`, {
-        method: 'delete'
+        method: 'delete',
+        headers: {
+          Authorization: 'BEARER ' + token
+        }
       })
       setPayments(payments.filter(p => p._id !== deleteCandidate))
       setDeleteCandidate('')
@@ -103,10 +104,12 @@ const DetailsTable = ({ payments, setPayments }: DetailsTableProps) => {
                 <td>{payment.value ? payment.value.toLocaleString() : '-'}</td>
                 <td>{paymentTypes[payment.type]}</td>
                 <td>
-                  <Close
-                    onClick={() => openDeleteModal(payment._id)}
-                    style={{ cursor: 'pointer', color: 'red', display: 'flex' }}
-                  />
+                  <div className={styles.actions}>
+                    <Close
+                      onClick={() => openDeleteModal(payment._id)}
+                      className={styles.close_icon}
+                    />
+                  </div>
                 </td>
               </tr>
             )

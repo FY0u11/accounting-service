@@ -1,11 +1,13 @@
+import { useRouter } from 'next/router'
+import { useContext } from 'react'
+import { AppContext } from '../../../context/AppContext'
 import { useLanguage } from '../../../hooks/useLanguage'
-import { Types } from '../../../types'
+import Button from '../../Button/Button'
 import CustomSelect from '../../CustomSelect/CustomSelect'
 import PaymentFormModal from '../../PaymentFormModal/PaymentFormModal'
-// import styles from './MainHeader.module.css'
+import styles from './MainHeader.module.css'
 
 type MainHeaderProps = {
-  addPaymentHandler: (payment: Types.PaymentForCreate) => void
   months: string[]
   selectMonthHandler: (month: string) => void
   selectedMonth: string
@@ -15,7 +17,6 @@ type MainHeaderProps = {
 }
 
 const MainHeader = ({
-  addPaymentHandler,
   months = [],
   selectMonthHandler,
   selectedMonth,
@@ -24,21 +25,41 @@ const MainHeader = ({
   selectYearHandler
 }: MainHeaderProps) => {
   const { lang } = useLanguage()
+  const { setUser, setToken, user } = useContext(AppContext)
+  const router = useRouter()
+
+  const logoutHandler = () => {
+    setUser(null)
+    setToken('')
+    window.localStorage.removeItem('token')
+    router.push('/auth')
+  }
+
   return (
     <>
-      <PaymentFormModal addPaymentHandler={addPaymentHandler} />
-      <CustomSelect
-        title={lang.SELECT_YEAR}
-        onChangeHandler={selectYearHandler}
-        values={years}
-        selectedValue={selectedYear}
-      />
-      <CustomSelect
-        title={lang.SELECT_MONTH}
-        onChangeHandler={selectMonthHandler}
-        values={months}
-        selectedValue={selectedMonth}
-      />
+      {user ? (
+        <div className={styles.container}>
+          <div className={styles.left}>
+            <PaymentFormModal />
+            <CustomSelect
+              title={lang.SELECT_YEAR}
+              onChangeHandler={selectYearHandler}
+              values={years}
+              selectedValue={selectedYear}
+            />
+            <CustomSelect
+              title={lang.SELECT_MONTH}
+              onChangeHandler={selectMonthHandler}
+              values={months}
+              selectedValue={selectedMonth}
+            />
+          </div>
+          <div className={styles.right}>
+            <p>{user.username}</p>
+            <Button onClick={logoutHandler}>Выйти</Button>
+          </div>
+        </div>
+      ) : null}
     </>
   )
 }

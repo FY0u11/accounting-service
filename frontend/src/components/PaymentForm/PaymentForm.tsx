@@ -1,21 +1,20 @@
 import { MouseEvent, useState } from 'react'
+import { useAddPaymentHandler } from '../../hooks/useAddPaymentHandler'
 import { useLanguage } from '../../hooks/useLanguage'
 import { Types } from '../../types'
 import Button from '../Button/Button'
 import styles from './PaymentForm.module.css'
 import RadioInput from './RadioInput/RadioInput'
 
-type PaymentFormProps = {
-  addPaymentHandler: (payment: Types.PaymentForCreate) => void
-}
-
-const PaymentForm = ({ addPaymentHandler }: PaymentFormProps) => {
+const PaymentForm = () => {
   const [type, setType] = useState('cash' as Types.PaymentTypes)
   const [value, setValue] = useState('')
   const { lang } = useLanguage()
+  const addPaymentHandler = useAddPaymentHandler()
 
   const onClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    if (isNaN(+value) || +value <= 0 || +value > 10e7 || value.length > 9) return
     setValue('')
     addPaymentHandler({ value: +value, type })
   }

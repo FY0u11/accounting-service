@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './SummaryTable.module.css'
 import Link from 'next/link'
 import { useLanguage } from '../../hooks/useLanguage'
 import { Types } from '../../types'
+import { AppContext } from '../../context/AppContext'
 
 type YearsMapType = Map<number, Map<string, Map<number, Types.SummaryPayment>>>
 
 type SummaryTableProps = {
-  payments: Types.Payment[]
   setMonths: Types.SetState<string[]>
   setYears: Types.SetState<string[]>
   selectedMonth: string
@@ -18,7 +18,6 @@ type SummaryTableProps = {
 }
 
 const SummaryTable = ({
-  payments,
   setMonths,
   setYears,
   selectedMonth,
@@ -32,8 +31,9 @@ const SummaryTable = ({
     [] as Types.SummaryPayment[]
   )
   const { lang } = useLanguage()
+  const { payments } = useContext(AppContext)
   const tableHeaders = {
-    day: lang.DATE,
+    day: lang.DAY,
     cash: lang.CASH,
     bank: lang.BANK,
     card: lang.CARD,
@@ -95,7 +95,7 @@ const SummaryTable = ({
   }, [payments])
 
   useEffect(() => {
-    if (!selectedMonth) {
+    if (!selectedMonth || paymentsMap.size === 0) {
       return
     }
     const sPayments = Array.from(
@@ -109,7 +109,7 @@ const SummaryTable = ({
   }, [selectedMonth])
 
   useEffect(() => {
-    if (!selectedYear) {
+    if (!selectedYear || paymentsMap.size === 0) {
       return
     }
     const months: string[] = Array.from(paymentsMap.get(+selectedYear).keys())
@@ -126,7 +126,7 @@ const SummaryTable = ({
   }, [selectedYear])
 
   useEffect(() => {
-    if (!paymentsMap || !selectedMonth || !selectedYear) return
+    if (paymentsMap.size === 0 || !selectedMonth || !selectedYear) return
     const sPayments = Array.from(
       paymentsMap
         .get(+selectedYear)

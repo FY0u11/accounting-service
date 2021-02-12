@@ -1,22 +1,28 @@
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
+import { AppContext } from '../context/AppContext'
 import { Types } from '../types'
 
-import { useAddPaymentHandler } from './useAddPaymentHandler'
 import { useLoadAllPayments } from './useLoadAllPayments'
 import { useLoadDayPayments } from './useLoadDayPayments'
 
 export const usePayments = (type: Types.UsePaymentsTypes = 'all') => {
-  const [payments, setPayments] = useState([] as Types.Payment[])
+  const { setPayments, token } = useContext(AppContext)
+  const router = useRouter()
 
-  switch (type) {
-    case 'all':
-      useLoadAllPayments(setPayments)
-      break
-    case 'day':
-      useLoadDayPayments(setPayments)
-      break
-  }
+  if (type === 'all')
+    useEffect(() => {
+      (async () => {
+        setPayments(await useLoadAllPayments(token))
+      })()
+    }, [token])
 
-  const addPaymentHandler = useAddPaymentHandler(payments, setPayments)
-  return { payments, setPayments, addPaymentHandler }
+  if (type === 'day')
+    useEffect(() => {
+      if (Object.keys(router.query).length) {
+        (async () => {
+          setPayments(await useLoadDayPayments(token, router.query))
+        })()
+      }
+    }, [router])
 }

@@ -28,4 +28,8 @@ export namespace Types {
     kaspi: number
     total: number
   }
+  export type User = {
+    id: string
+    username: string
+  }
 }

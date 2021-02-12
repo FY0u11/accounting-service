@@ -1,27 +1,43 @@
 import Button from '../../Button/Button'
 import PaymentFormModal from '../../PaymentFormModal/PaymentFormModal'
-// import styles from './Header.module.css'
+import styles from './DetailsHeader.module.css'
 import { useRouter } from 'next/router'
 import { useLanguage } from '../../../hooks/useLanguage'
-import { Types } from '../../../types'
+import { AppContext } from '../../../context/AppContext'
+import { useContext } from 'react'
 
-type DetailsHeaderProps = {
-  addPaymentHandler: (payment: Types.PaymentForCreate) => void
-}
-
-const DetailsHeader = ({ addPaymentHandler }: DetailsHeaderProps) => {
+const DetailsHeader = () => {
   const router = useRouter()
   const { lang } = useLanguage()
+  const { setUser, setToken, user } = useContext(AppContext)
+
+  const logoutHandler = () => {
+    setUser(null)
+    setToken('')
+    window.localStorage.removeItem('token')
+    router.push('/auth')
+  }
+
   return (
     <>
-      <PaymentFormModal addPaymentHandler={addPaymentHandler} />
-      <Button
-        onClick={() => {
-          router.push('/')
-        }}
-      >
-        {lang.BACK}
-      </Button>
+      {user ? (
+        <div className={styles.container}>
+          <div className={styles.left}>
+            <PaymentFormModal />
+            <Button
+              onClick={() => {
+                router.push('/')
+              }}
+            >
+              {lang.BACK}
+            </Button>
+          </div>
+          <div className={styles.right}>
+            <p>{user.username}</p>
+            <Button onClick={logoutHandler}>Выйти</Button>
+          </div>
+        </div>
+      ) : null}
     </>
   )
 }
