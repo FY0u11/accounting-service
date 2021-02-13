@@ -1,6 +1,6 @@
 export default {
   ADD_BUTTON: 'Добавить',
-  DOCUMENT_TITLE: 'Сервис Учета',
+  DOCUMENT_TITLE: 'Сервис Учёта',
   DOCUMENT_TITLE_HOME: 'Главная страница',
   DOCUMENT_TITLE_DETAILS: 'Детальная страница',
   DOCUMENT_TITLE_NOT_FOUND: 'Не найдено',
@@ -9,14 +9,14 @@ export default {
   NO: 'Нет',
   DATE: 'Дата',
   TIME: 'Время',
-  CASH: 'Наличный расчет',
-  BANK: 'Безналичный расчет',
+  CASH: 'Наличный расчёт',
+  BANK: 'Безналичный расчёт',
   CARD: 'Оплата по карте',
   KASPI: 'Оплата на Kaspi Gold',
   TOTAL: 'Итого',
   TOTAL_MONTH: 'Всего за месяц',
-  TYPE: 'Тип',
-  PAYMENT: 'Платеж',
+  TYPE: 'Тип операции',
+  PAYMENT: 'Платёж',
   CONFIRM_DELETE: 'Действительно удалить?',
   ACTIONS: 'Действия',
   SELECT_YEAR: 'Выберите год',
@@ -25,5 +25,6 @@ export default {
   ADD_PAYMENT: 'Внести',
   MODAL_ADD_PAYMENT: 'Добавить оплату',
   BACK: 'Назад',
-  DAY: 'День'
+  DAY: 'День',
+  NUMBER: '№'
 }

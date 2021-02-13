@@ -44,21 +44,6 @@ const Auth = () => {
     }
   }
 
-  const registerHandler = async (e: MouseEvent) => {
-    e.preventDefault()
-
-    try {
-      const response = await fetch('http://localhost:3030/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      console.log(await response.json())
-    } catch (e) {
-      console.log(e.message)
-    }
-  }
-
   return (
     <>
       {!user ? (
@@ -88,7 +73,6 @@ const Auth = () => {
               </label>
               <div className={styles.buttons}>
                 <Button onClick={loginHandler}>Войти</Button>
-                <Button onClick={registerHandler}>Регистрация</Button>
               </div>
             </form>
           </div>

@@ -7,25 +7,19 @@ import CustomSelect from '../../CustomSelect/CustomSelect'
 import PaymentFormModal from '../../PaymentFormModal/PaymentFormModal'
 import styles from './MainHeader.module.css'
 
-type MainHeaderProps = {
-  months: string[]
-  selectMonthHandler: (month: string) => void
-  selectedMonth: string
-  selectedYear: string
-  years: string[]
-  selectYearHandler: (year: string) => void
-}
-
-const MainHeader = ({
-  months = [],
-  selectMonthHandler,
-  selectedMonth,
-  selectedYear,
-  years = [],
-  selectYearHandler
-}: MainHeaderProps) => {
+const MainHeader = () => {
   const { lang } = useLanguage()
-  const { setUser, setToken, user } = useContext(AppContext)
+  const {
+    setUser,
+    setToken,
+    user,
+    setSelectedYear,
+    setSelectedMonth,
+    years,
+    months,
+    selectedYear,
+    selectedMonth
+  } = useContext(AppContext)
   const router = useRouter()
 
   const logoutHandler = () => {
@@ -43,13 +37,13 @@ const MainHeader = ({
             <PaymentFormModal />
             <CustomSelect
               title={lang.SELECT_YEAR}
-              onChangeHandler={selectYearHandler}
+              onChangeHandler={setSelectedYear}
               values={years}
               selectedValue={selectedYear}
             />
             <CustomSelect
               title={lang.SELECT_MONTH}
-              onChangeHandler={selectMonthHandler}
+              onChangeHandler={setSelectedMonth}
               values={months}
               selectedValue={selectedMonth}
             />

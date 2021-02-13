@@ -8,6 +8,18 @@ type AppContextType = {
   setToken: Types.SetState<string>
   user: Types.User | null
   setUser: Types.SetState<Types.User | null>
+  months: string[]
+  setMonths: Types.SetState<string[]>
+  years: string[]
+  setYears: Types.SetState<string[]>
+  selectedMonth: string
+  setSelectedMonth: Types.SetState<string>
+  selectedYear: string
+  setSelectedYear: Types.SetState<string>
+  summarySorting: Types.Sorting
+  setSummarySorting: Types.SetState<Types.Sorting>
+  detailsSorting: Types.Sorting
+  setDetailsSorting: Types.SetState<Types.Sorting>
 } // todo move this to Types.ts
 
 export const AppContext = React.createContext<AppContextType>(

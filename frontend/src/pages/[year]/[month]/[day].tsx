@@ -7,11 +7,11 @@ import { AppContext } from '../../../context/AppContext'
 
 const DayDetails = () => {
   const { lang } = useLanguage()
-  const { user } = useContext(AppContext)
+  const { user, payments } = useContext(AppContext)
 
   return (
     <>
-      {user ? (
+      {user && payments.length ? (
         <DetailsLayout
           title={lang.DOCUMENT_TITLE_DETAILS}
           HeaderComponent={<DetailsHeader />}
