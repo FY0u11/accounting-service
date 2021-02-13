@@ -26,5 +26,17 @@ export default {
   MODAL_ADD_PAYMENT: 'Добавить оплату',
   BACK: 'Назад',
   DAY: 'День',
-  NUMBER: '№'
+  NUMBER: '№',
+  MONTHS_JAN: 'Январь',
+  MONTHS_FEB: 'Февраль',
+  MONTHS_MAR: 'Март',
+  MONTHS_APR: 'Апрель',
+  MONTHS_MAY: 'Май',
+  MONTHS_JUN: 'Июнь',
+  MONTHS_JUL: 'Июль',
+  MONTHS_AUG: 'Август',
+  MONTHS_SEP: 'Сентябрь',
+  MONTHS_OCT: 'Октябрь',
+  MONTHS_NOV: 'Ноябрь',
+  MONTHS_DEC: 'Декабрь'
 }

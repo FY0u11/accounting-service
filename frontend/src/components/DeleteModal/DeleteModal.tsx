@@ -10,19 +10,12 @@ type DeleteModalProps = {
   deleteHandler: () => void
 }
 
-const DeleteModal = ({
-  isModalOpened,
-  setIsModalOpened,
-  deleteHandler
-}: DeleteModalProps) => {
+const DeleteModal = ({ isModalOpened, setIsModalOpened, deleteHandler }: DeleteModalProps) => {
   const { lang } = useLanguage()
   return (
     <>
       {isModalOpened ? (
-        <ModalWindow
-          setIsModalOpened={setIsModalOpened}
-          title={lang.CONFIRM_DELETE}
-        >
+        <ModalWindow setIsModalOpened={setIsModalOpened} title={lang.CONFIRM_DELETE}>
           <div className={styles.delete_modal}>
             <Button onClick={deleteHandler}>{lang.YES}</Button>
             <Button onClick={() => setIsModalOpened(false)}>{lang.NO}</Button>

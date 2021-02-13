@@ -29,49 +29,23 @@ const PaymentForm = () => {
         onChange={e => setValue(e.target.value)}
       />
       <div>
-        <RadioInput
-          group="radio"
-          id="1"
-          value="cash"
-          type={type}
-          setType={setType}
-        >
+        <RadioInput group="radio" id="1" value="cash" type={type} setType={setType}>
           {lang.CASH}
         </RadioInput>
-        <RadioInput
-          group="radio"
-          id="2"
-          value="bank"
-          type={type}
-          setType={setType}
-        >
+        <RadioInput group="radio" id="2" value="bank" type={type} setType={setType}>
           {lang.BANK}
         </RadioInput>
-        <RadioInput
-          group="radio"
-          id="3"
-          value="card"
-          type={type}
-          setType={setType}
-        >
+        <RadioInput group="radio" id="3" value="card" type={type} setType={setType}>
           {lang.CARD}
         </RadioInput>
-        <RadioInput
-          group="radio"
-          id="4"
-          value="kaspi"
-          type={type}
-          setType={setType}
-        >
+        <RadioInput group="radio" id="4" value="kaspi" type={type} setType={setType}>
           {lang.KASPI}
         </RadioInput>
       </div>
 
       <Button
         onClick={e => onClickHandler(e)}
-        disabled={
-          isNaN(+value) || +value <= 0 || +value > 10e7 || value.length > 9
-        }
+        disabled={isNaN(+value) || +value <= 0 || +value > 10e7 || value.length > 9}
       >
         {lang.ADD_PAYMENT}
       </Button>

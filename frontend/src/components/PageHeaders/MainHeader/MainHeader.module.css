@@ -7,7 +7,6 @@
 
 .right {
   display: flex;
-  /* height: 40px; */
   gap: 2rem;
   align-items: center;
 }

@@ -7,7 +7,7 @@ import { AppProps } from 'next/app'
 import { AppContext } from '../context/AppContext'
 import { Types } from '../types'
 import { verify } from 'jsonwebtoken'
-import { useLoadAllPayments } from '../hooks/useLoadAllPayments'
+import { usePayments } from '../hooks/usePayments'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -56,7 +56,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     (async () => {
-      setPayments(await useLoadAllPayments(token))
+      setPayments(await usePayments(token))
     })()
   }, [token])
 

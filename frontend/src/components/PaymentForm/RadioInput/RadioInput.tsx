@@ -11,15 +11,7 @@ type RadioInputProps = {
   children: React.ReactNode
 }
 
-const RadioInput = ({
-  type,
-  value,
-  setType,
-  group,
-  id,
-  children,
-  ...rest
-}: RadioInputProps) => {
+const RadioInput = ({ type, value, setType, group, id, children, ...rest }: RadioInputProps) => {
   return (
     <p>
       <label htmlFor={id}>

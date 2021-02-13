@@ -12,10 +12,7 @@ const PaymentFormModal = () => {
     <>
       <Button onClick={() => setIsModalOpened(true)}>{lang.ADD_BUTTON}</Button>
       {isModalOpened ? (
-        <ModalWindow
-          setIsModalOpened={setIsModalOpened}
-          title={lang.MODAL_ADD_PAYMENT}
-        >
+        <ModalWindow setIsModalOpened={setIsModalOpened} title={lang.MODAL_ADD_PAYMENT}>
           <PaymentForm />
         </ModalWindow>
       ) : null}

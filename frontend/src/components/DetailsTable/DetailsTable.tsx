@@ -6,33 +6,14 @@ import { useLanguage } from '../../hooks/useLanguage'
 import DeleteModal from '../DeleteModal/DeleteModal'
 import { Types } from '../../types'
 import { AppContext } from '../../context/AppContext'
-import moment from 'moment'
-import { useRouter } from 'next/router'
-import {
-  AccountBalance,
-  LocalAtm,
-  CreditCard,
-  MonetizationOn
-} from '@material-ui/icons'
+// import moment from 'moment'
+import { AccountBalance, LocalAtm, CreditCard, MonetizationOn } from '@material-ui/icons'
 
-const DetailsTable = () => {
-  const router = useRouter()
+const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
-  const { payments, setPayments, token, detailsSorting, setDetailsSorting } = useContext(
-    AppContext
-  )
+  const { setPayments, token, detailsSorting, setDetailsSorting } = useContext(AppContext)
+  const [selectedPayments, setSelectedPayments] = useState([] as Types.Payment[])
   const [deleteCandidate, setDeleteCandidate] = useState('')
-  const [dayPayments, setDayPayments] = useState(
-    payments.filter(payment => {
-      return moment(payment.time).isSame(
-        moment(
-          `${router.query.day}/${router.query.month}/${router.query.year}`,
-          'DD/MM/YYYY'
-        ),
-        'day'
-      )
-    })
-  )
   const { lang } = useLanguage()
   const paymentTypes = {
     cash: lang.CASH,
@@ -46,50 +27,30 @@ const DetailsTable = () => {
     type: lang.TYPE
   }
 
-  const isToday = () => {
-    return moment().isSame(
-      moment(
-        `${router.query.day}/${router.query.month}/${router.query.year}`,
-        'DD/MM/YYYY'
-      ),
-      'day'
-    )
-  }
+  // const isToday = () => {
+  //   return moment().isSame(
+  //     moment(
+  //       `${router.query.day}/${router.query.month}/${router.query.year}`,
+  //       'DD/MM/YYYY'
+  //     ),
+  //     'day'
+  //   )
+  // }
 
   const sort = payments => {
     return [...payments].sort((p1, p2) =>
-      p1[detailsSorting.by as keyof Types.Payment] <
-      p2[detailsSorting.by as keyof Types.Payment]
+      p1[detailsSorting.by as keyof Types.Payment] < p2[detailsSorting.by as keyof Types.Payment]
         ? detailsSorting.as
         : -detailsSorting.as
     )
   }
 
   useEffect(() => {
-    setDayPayments(
-      sort(
-        payments.filter(payment => {
-          return moment(payment.time).isSame(
-            moment(
-              `${router.query.day}/${router.query.month}/${router.query.year}`,
-              'DD/MM/YYYY'
-            ),
-            'day'
-          )
-        })
-      )
-    )
+    setSelectedPayments(sort(payments))
   }, [payments])
 
   useEffect(() => {
-    setDayPayments(
-      [...dayPayments].sort((p1, p2) =>
-        p1[detailsSorting.by as keyof Types.Payment] <
-        p2[detailsSorting.by as keyof Types.Payment]
-          ? detailsSorting.as
-          : -detailsSorting.as
-      )
-    )
+    setSelectedPayments(sort(selectedPayments))
   }, [detailsSorting])
 
   const deleteHandler = async () => {
@@ -115,11 +76,7 @@ const DetailsTable = () => {
 
   return (
     <div className={styles.container}>
-      <DeleteModal
-        isModalOpened={isModalOpened}
-        setIsModalOpened={setIsModalOpened}
-        deleteHandler={deleteHandler}
-      />
+      <DeleteModal isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} deleteHandler={deleteHandler} />
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
@@ -129,31 +86,25 @@ const DetailsTable = () => {
             {Object.keys(tableHeaders).map(type => {
               return (
                 <th key={type + 'header'}>
-                  <SortingHeader
-                    sorting={detailsSorting}
-                    setSorting={setDetailsSorting}
-                    by={type}
-                  >
+                  <SortingHeader sorting={detailsSorting} setSorting={setDetailsSorting} by={type}>
                     {tableHeaders[type as keyof typeof tableHeaders]}
                   </SortingHeader>
                 </th>
               )
             })}
             {/* {isToday() ? ( */}
-              <th>
-                <SortingHeader>{lang.ACTIONS}</SortingHeader>
-              </th>
+            <th>
+              <SortingHeader>{lang.ACTIONS}</SortingHeader>
+            </th>
             {/* ) : null} */}
           </tr>
         </thead>
         <tbody className={styles.tbody}>
-          {dayPayments.map((payment, i) => {
+          {selectedPayments.map((payment, i) => {
             return (
               <tr key={i}>
                 <td>{i + 1}</td>
-                <td>
-                  {new Date(Date.parse(payment.time)).toLocaleString('ru')}
-                </td>
+                <td>{new Date(Date.parse(payment.time)).toLocaleString('ru')}</td>
                 <td>{payment.value ? payment.value.toLocaleString() : '-'}</td>
                 <td>
                   <div className={styles.type}>
@@ -170,14 +121,11 @@ const DetailsTable = () => {
                   </div>
                 </td>
                 {/* {isToday() ? ( */}
-                  <td>
-                    <div className={styles.actions}>
-                      <Close
-                        onClick={() => openDeleteModal(payment._id)}
-                        className={styles.close_icon}
-                      />
-                    </div>
-                  </td>
+                <td>
+                  <div className={styles.actions}>
+                    <Close onClick={() => openDeleteModal(payment._id)} className={styles.close_icon} />
+                  </div>
+                </td>
                 {/* ) : null} */}
               </tr>
             )
@@ -186,7 +134,7 @@ const DetailsTable = () => {
             <td>{lang.TOTAL}</td>
             <td></td>
             <td>
-              {dayPayments
+              {selectedPayments
                 .reduce((acc, payment) => (acc += payment.value), 0)
                 .toLocaleString()
                 .replace(/^0$/, '-')}

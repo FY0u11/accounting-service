@@ -46,6 +46,7 @@ const MainHeader = () => {
               onChangeHandler={setSelectedMonth}
               values={months}
               selectedValue={selectedMonth}
+              isForMonths={true}
             />
           </div>
           <div className={styles.right}>

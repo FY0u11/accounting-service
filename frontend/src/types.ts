@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Types {
-  export type UsePaymentsTypes = 'all' | 'day'
   export type PaymentTypes = 'cash' | 'bank' | 'card' | 'kaspi'
   export type Payment = {
     _id: string
@@ -21,7 +20,6 @@ export namespace Types {
   }
   export type SummaryPayment = {
     day: number
-    month: number
     cash: number
     card: number
     bank: number

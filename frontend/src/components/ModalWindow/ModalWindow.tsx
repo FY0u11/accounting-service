@@ -8,11 +8,7 @@ type ModalWindowProps = {
   children: React.ReactNode
 }
 
-const ModalWindow = ({
-  setIsModalOpened,
-  title,
-  children
-}: ModalWindowProps) => {
+const ModalWindow = ({ setIsModalOpened, title, children }: ModalWindowProps) => {
   return (
     <div
       className={styles.container}

@@ -9,25 +9,11 @@ type SortingHeaderProps = {
   children: React.ReactNode
 }
 
-const SortingHeader = ({
-  sorting = { by: '', as: 1 },
-  setSorting,
-  by = '_',
-  children
-}: SortingHeaderProps) => {
+const SortingHeader = ({ sorting = { by: '', as: 1 }, setSorting, by = '_', children }: SortingHeaderProps) => {
   return (
-    <div
-      className={styles.container}
-      onClick={() => (setSorting ? setSorting({ by, as: -sorting.as }) : null)}
-    >
+    <div className={styles.container} onClick={() => (setSorting ? setSorting({ by, as: -sorting.as }) : null)}>
       {children}
-      {sorting.by === by ? (
-        sorting.as === -1 ? (
-          <ExpandLess />
-        ) : (
-          <ExpandMore />
-        )
-      ) : null}
+      {sorting.by === by ? sorting.as === -1 ? <ExpandLess /> : <ExpandMore /> : null}
     </div>
   )
 }

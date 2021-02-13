@@ -9,10 +9,7 @@ type ButtonProps = {
 
 const Button = ({ onClick, children, disabled = false }: ButtonProps) => {
   return (
-    <button
-      className={styles.button + (disabled ? ' ' + styles.disabled : '')}
-      onClick={onClick}
-    >
+    <button className={styles.button + (disabled ? ' ' + styles.disabled : '')} onClick={onClick}>
       <span>{children}</span>
     </button>
   )

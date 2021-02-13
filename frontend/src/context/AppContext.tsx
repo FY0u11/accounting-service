@@ -22,6 +22,4 @@ type AppContextType = {
   setDetailsSorting: Types.SetState<Types.Sorting>
 } // todo move this to Types.ts
 
-export const AppContext = React.createContext<AppContextType>(
-  {} as AppContextType
-)
+export const AppContext = React.createContext<AppContextType>({} as AppContextType)
