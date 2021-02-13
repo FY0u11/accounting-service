@@ -1,6 +1,8 @@
 import Users from '../models/Users'
 import { sign } from 'jsonwebtoken'
 import { get } from 'config'
+import { config } from 'dotenv'
+config()
 
 export default async (user: Types.User) => {
   try {
@@ -12,13 +14,9 @@ export default async (user: Types.User) => {
 
     if (candidate.password !== user.password) return null
 
-    const token = sign(
-      { id: candidate._id, username: candidate.username },
-      get('tokenSecret'),
-      {
-        expiresIn: '1h'
-      }
-    )
+    const token = sign({ id: candidate._id, username: candidate.username }, process.env.SECRET, {
+      expiresIn: '8h'
+    })
 
     return token
   } catch (e) {

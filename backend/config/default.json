@@ -1,10 +1,8 @@
 {
-    "dbConnect": "mongodb+srv://devUser:1234qwer@cluster0.qx97r.mongodb.net/work-project?retryWrites=true&w=majority",
     "dbOptions": {
         "useNewUrlParser": true,
         "useUnifiedTopology": true,
         "useCreateIndex": true
     },
-    "port": 3030,
-    "tokenSecret": "Some very very secret json web token string that cannot be unsecreted"
+    "port": 3030
 }
