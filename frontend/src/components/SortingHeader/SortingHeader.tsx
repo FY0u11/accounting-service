@@ -1,6 +1,7 @@
 import { ExpandLess, ExpandMore } from '@material-ui/icons'
 import { Types } from '../../types'
 import styles from './SortingHeader.module.css'
+import React from 'react'
 
 type SortingHeaderProps = {
   sorting?: Types.Sorting

@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
-import SortingHeader from '../SortingHeader/SortingHeader'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
 import { useLanguage } from '../../hooks/useLanguage'
-import DeleteModal from '../DeleteModal/DeleteModal'
 import { Types } from '../../types'
 import { AppContext } from '../../context/AppContext'
 // import moment from 'moment'
 import { AccountBalance, LocalAtm, CreditCard, MonetizationOn } from '@material-ui/icons'
+import { YesCancelModal, SortingHeader } from 'components'
 
 const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
@@ -76,7 +75,12 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
 
   return (
     <div className={styles.container}>
-      <DeleteModal isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} deleteHandler={deleteHandler} />
+      <YesCancelModal
+        title={lang.CONFIRM_DELETE}
+        isModalOpened={isModalOpened}
+        setIsModalOpened={setIsModalOpened}
+        yesClickHandler={deleteHandler}
+      />
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
@@ -132,7 +136,7 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
           })}
           <tr className={styles.total_by}>
             <td>{lang.TOTAL}</td>
-            <td></td>
+            <td />
             <td>
               {selectedPayments
                 .reduce((acc, payment) => (acc += payment.value), 0)

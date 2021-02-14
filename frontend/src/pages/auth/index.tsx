@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router'
 import { MouseEvent, useContext, useEffect, useState } from 'react'
-import Button from '../../components/Button/Button'
-import Layout from '../../components/Layout/Layout'
 import { AppContext } from '../../context/AppContext'
 import { useToken } from '../../hooks/useToken'
 import { decode } from 'jsonwebtoken'
 import styles from './Auth.module.css'
+import { Button, Layout } from 'components'
 
 const Auth = () => {
   const [username, setUsername] = useState('')

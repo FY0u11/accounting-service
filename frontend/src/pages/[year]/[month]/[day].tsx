@@ -1,11 +1,9 @@
-import DetailsTable from '../../../components/DetailsTable/DetailsTable'
-import DetailsLayout from '../../../components/Layout/Layout'
-import DetailsHeader from '../../../components/PageHeaders/DetailsHeader/DetailsHeader'
 import { useLanguage } from '../../../hooks/useLanguage'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import moment from 'moment'
 import { useRouter } from 'next/router'
+import { DetailsHeader, DetailsTable, Layout } from 'components'
 
 const DayDetails = () => {
   const router = useRouter()
@@ -26,9 +24,9 @@ const DayDetails = () => {
   return (
     <>
       {user && payments.length ? (
-        <DetailsLayout title={lang.DOCUMENT_TITLE_DETAILS} HeaderComponent={<DetailsHeader />}>
+        <Layout title={lang.DOCUMENT_TITLE_DETAILS} HeaderComponent={<DetailsHeader />}>
           <DetailsTable payments={selectedPayments} />
-        </DetailsLayout>
+        </Layout>
       ) : null}
     </>
   )

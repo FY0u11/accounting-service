@@ -1,16 +1,23 @@
-// import styles from './CustomSelect.module.css'
+import styles from './CustomSelect.module.css'
 
 import { useLanguage } from '../../hooks/useLanguage'
+import { nF } from 'utils'
 
 type CustomSelectProps = {
-  onChangeHandler: (value: string) => void
-  values: string[]
-  selectedValue: string
-  title: string
+  onChangeHandler?: (value: string) => void
+  values?: string[]
+  selectedValue?: string
+  title?: string
   isForMonths?: boolean
 }
 
-const CustomSelect = ({ onChangeHandler, values, selectedValue, title, isForMonths = false }: CustomSelectProps) => {
+const CustomSelect = ({
+  onChangeHandler = nF,
+  values = [],
+  selectedValue = '',
+  title = 'default',
+  isForMonths = false
+}: CustomSelectProps) => {
   const { lang } = useLanguage()
   const months = [
     lang.MONTHS_JAN,
@@ -29,23 +36,14 @@ const CustomSelect = ({ onChangeHandler, values, selectedValue, title, isForMont
 
   return (
     <>
-      {selectedValue ? (
-        <select
-          name={title}
-          onChange={e => {
-            onChangeHandler(e.target.value)
-          }}
-          style={{ margin: '0 1rem' }}
-          value={selectedValue}
-        >
-          <option disabled>{title}</option>
-          {values.map(value => (
-            <option value={value} key={value}>
-              {isForMonths ? months[+value - 1] : value}
-            </option>
-          ))}
-        </select>
-      ) : null}
+      <select onChange={e => onChangeHandler(e.target.value)} className={styles.select} value={selectedValue}>
+        <option disabled>{title}</option>
+        {values.map(value => (
+          <option value={value} key={value}>
+            {isForMonths ? months[+value - 1] : value}
+          </option>
+        ))}
+      </select>
     </>
   )
 }

@@ -5,8 +5,7 @@ export const usePayments = async token => {
         Authorization: 'BEARER ' + token
       }
     })
-    const payments = await response.json()
-    return payments
+    return await response.json()
   } catch (e) {
     console.log(e.message)
   }

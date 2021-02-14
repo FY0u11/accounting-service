@@ -20,6 +20,6 @@ type AppContextType = {
   setSummarySorting: Types.SetState<Types.Sorting>
   detailsSorting: Types.Sorting
   setDetailsSorting: Types.SetState<Types.Sorting>
-} // todo move this to Types.ts
+}
 
 export const AppContext = React.createContext<AppContextType>({} as AppContextType)

@@ -6,7 +6,7 @@ export default {
   DOCUMENT_TITLE_NOT_FOUND: 'Не найдено',
   NOT_FOUND: '404 Страница не найдена',
   YES: 'Да',
-  NO: 'Нет',
+  CANCEL: 'Отмена',
   DATE: 'Дата',
   TIME: 'Время',
   CASH: 'Наличный расчёт',
@@ -26,6 +26,7 @@ export default {
   MODAL_ADD_PAYMENT: 'Добавить оплату',
   BACK: 'Назад',
   DAY: 'День',
+  ARE_YOU_SURE: 'Вы уверены?',
   NUMBER: '№',
   MONTHS_JAN: 'Январь',
   MONTHS_FEB: 'Февраль',
@@ -38,5 +39,6 @@ export default {
   MONTHS_SEP: 'Сентябрь',
   MONTHS_OCT: 'Октябрь',
   MONTHS_NOV: 'Ноябрь',
-  MONTHS_DEC: 'Декабрь'
+  MONTHS_DEC: 'Декабрь',
+  LOGOUT: 'Выйти'
 }

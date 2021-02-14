@@ -1,14 +1,15 @@
 import Head from 'next/head'
 import { useLanguage } from '../../hooks/useLanguage'
 import styles from './Layout.module.css'
+import React from 'react'
 
 type LayoutProps = {
-  title: string
+  title?: string
   HeaderComponent?: React.ReactNode
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
-const Layout = ({ title = '', HeaderComponent = null, children }: LayoutProps) => {
+const Layout = ({ title = 'default page', HeaderComponent = null, children = null }: LayoutProps) => {
   const { lang } = useLanguage()
   return (
     <div className={styles.container}>

@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from 'react'
-import SortingHeader from '../SortingHeader/SortingHeader'
+import { SortingHeader } from 'components'
 import styles from './SummaryTable.module.css'
 import Link from 'next/link'
 import { useLanguage } from '../../hooks/useLanguage'
 import { Types } from '../../types'
 import { AppContext } from '../../context/AppContext'
 import moment from 'moment'
+
+// fixme: If go to details page, delete payment and press back button it will replace all payments with details payments
 
 const SummaryTable = ({ payments }: { payments: Types.Payment[] }) => {
   const [selectedPayments, setSelectedPayments] = useState([] as Types.SummaryPayment[])

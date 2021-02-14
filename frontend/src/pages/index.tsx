@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
-import Layout from '../components/Layout/Layout'
-import SummaryTable from '../components/SummaryTable/SummaryTable'
-import MainHeader from '../components/PageHeaders/MainHeader/MainHeader'
 import { useLanguage } from '../hooks/useLanguage'
 import React from 'react'
 import { AppContext } from '../context/AppContext'
 import moment from 'moment'
+import { Layout, MainHeader, SummaryTable } from 'components'
 
 const HomePage = () => {
   const { lang } = useLanguage()

@@ -1,4 +1,4 @@
-import Layout from '../components/Layout/Layout'
+import { Layout } from 'components'
 import { useLanguage } from '../hooks/useLanguage'
 import React from 'react'
 
