@@ -1,0 +1,25 @@
+{
+  "name": "work-project",
+  "version": "1.0.0",
+  "description": "This project is accounting service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix backend/ run dev\" \"npm --prefix frontend run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FY0u11/accounting-service.git"
+  },
+  "author": "Sergey Strigin <darkauron1997@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FY0u11/accounting-service/issues"
+  },
+  "homepage": "https://github.com/FY0u11/accounting-service#readme",
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
