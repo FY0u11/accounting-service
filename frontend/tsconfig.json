@@ -23,7 +23,8 @@
       "components/*": ["./src/components/*"],
       "containers": ["./src/containers"],
       "hooks": ["./src/hooks/index.ts"],
-      "utils": ["./src/utils"]
+      "utils": ["./src/utils"],
+      "api": ["./src/utils/api"]
     }
   },
   "include": [

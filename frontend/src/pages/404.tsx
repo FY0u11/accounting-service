@@ -1,5 +1,5 @@
 import { Layout } from 'components'
-import { useLanguage } from '../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import React from 'react'
 
 const NotFound = () => {

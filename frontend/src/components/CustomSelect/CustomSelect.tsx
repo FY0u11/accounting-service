@@ -1,6 +1,6 @@
 import styles from './CustomSelect.module.css'
 
-import { useLanguage } from '../../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import { nF } from 'utils'
 
 type CustomSelectProps = {

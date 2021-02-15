@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
-import { useLanguage } from '../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import React from 'react'
 import { AppContext } from '../context/AppContext'
 import moment from 'moment'
-import { Layout, MainHeader, SummaryTable } from 'components'
+import { Layout } from 'components'
+import { SummaryTableContainer } from 'containers'
 
 const HomePage = () => {
   const { lang } = useLanguage()
@@ -31,6 +32,7 @@ const HomePage = () => {
   }
 
   const setPayments = () => {
+    if (!payments.length) return
     setSelectedPayments(
       payments.filter(p => {
         return moment(p.time).isSame(moment(`${selectedYear}.${selectedMonth}`, 'YYYY.MM'), 'month')
@@ -67,8 +69,8 @@ const HomePage = () => {
   }, [selectedMonth])
 
   return (
-    <Layout title={lang.DOCUMENT_TITLE_HOME} HeaderComponent={<MainHeader />}>
-      {token && selectedPayments.length ? <SummaryTable payments={selectedPayments} /> : null}
+    <Layout title={lang.DOCUMENT_TITLE_HOME} header="main">
+      {token && selectedPayments.length ? <SummaryTableContainer payments={selectedPayments} /> : null}
     </Layout>
   )
 }

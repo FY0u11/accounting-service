@@ -7,7 +7,7 @@ import { AppProps } from 'next/app'
 import { AppContext } from '../context/AppContext'
 import { Types } from '../types'
 import { verify } from 'jsonwebtoken'
-import { usePayments } from '../hooks/usePayments'
+import { getPayments } from 'api'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -32,31 +32,40 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   const router = useRouter()
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = window.localStorage.getItem('token')
-        const jwtSecret = process.env.NEXT_PUBLIC_SECRET
-        if (!jwtSecret) {
-          console.log('Missing NEXT_PUBLIC_SECRET in .env.local')
-          return
-        }
-        const payload = verify(token ?? '', jwtSecret) as {
-          id: string
-          username: string
-        }
-        setToken(token ?? '')
-        setUser({ id: payload.id, username: payload.username })
-      } catch (e) {
-        window.localStorage.removeItem('token')
-        router.push('/auth')
+  const getTokenPayload = (token: string) => {
+    try {
+      const jwtSecret = process.env.NEXT_PUBLIC_SECRET
+      if (!jwtSecret) {
+        console.log('Missing NEXT_PUBLIC_SECRET in .env.local')
+        return
       }
+      return verify(token ?? '', jwtSecret) as {
+        id: string
+        username: string
+      }
+    } catch (e) {
+      window.localStorage.removeItem('token')
+      router.push('/auth')
+    }
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      const token = window.localStorage.getItem('token')
+      const payload = getTokenPayload(token)
+      if (!payload) return
+      setUser({ id: payload.id, username: payload.username })
+      setToken(token ?? '')
     })()
   }, [])
 
   useEffect(() => {
-    (async () => {
-      setPayments(await usePayments(token))
+    ;(async () => {
+      if (!token) return
+      const payload = getTokenPayload(token)
+      if (!payload) return
+      setUser({ id: payload.id, username: payload.username })
+      setPayments(await getPayments(token))
     })()
   }, [token])
 

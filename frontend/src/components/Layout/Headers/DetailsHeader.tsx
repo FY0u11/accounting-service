@@ -1,15 +1,16 @@
-import { Button, PageHeader } from 'components'
+import { Button } from 'components'
 import { useRouter } from 'next/router'
-import { useLanguage } from '../hooks/useLanguage'
+import { useLanguage } from 'hooks'
+import RootHeader from 'components/Layout/Headers/RootHeader/RootHeader'
 
 const DetailsHeader = () => {
   const router = useRouter()
   const { lang } = useLanguage()
 
   return (
-    <PageHeader>
+    <RootHeader>
       <Button onClick={() => router.push('/')}>{lang.BACK}</Button>
-    </PageHeader>
+    </RootHeader>
   )
 }
 

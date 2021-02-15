@@ -1,18 +1,29 @@
-import { useContext, useEffect, useState } from 'react'
 import styles from './DetailsTable.module.css'
 import { Close } from '@material-ui/icons'
-import { useLanguage } from '../../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import { Types } from '../../types'
-import { AppContext } from '../../context/AppContext'
-// import moment from 'moment'
 import { AccountBalance, LocalAtm, CreditCard, MonetizationOn } from '@material-ui/icons'
 import { YesCancelModal, SortingHeader } from 'components'
 
-const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
-  const [isModalOpened, setIsModalOpened] = useState(false)
-  const { setPayments, token, detailsSorting, setDetailsSorting } = useContext(AppContext)
-  const [selectedPayments, setSelectedPayments] = useState([] as Types.Payment[])
-  const [deleteCandidate, setDeleteCandidate] = useState('')
+type DetailsTableProps = {
+  payments: Types.Payment[]
+  detailsSorting: Types.Sorting
+  setDetailsSorting: Types.SetState<Types.Sorting>
+  deleteHandler: () => void
+  openDeleteModal: (id: string) => void
+  isModalOpened: boolean
+  setIsModalOpened: Types.SetState<boolean>
+}
+
+const DetailsTable = ({
+  payments,
+  detailsSorting,
+  setDetailsSorting,
+  deleteHandler,
+  openDeleteModal,
+  isModalOpened,
+  setIsModalOpened
+}: DetailsTableProps) => {
   const { lang } = useLanguage()
   const paymentTypes = {
     cash: lang.CASH,
@@ -24,53 +35,6 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
     time: lang.TIME,
     value: lang.PAYMENT,
     type: lang.TYPE
-  }
-
-  // const isToday = () => {
-  //   return moment().isSame(
-  //     moment(
-  //       `${router.query.day}/${router.query.month}/${router.query.year}`,
-  //       'DD/MM/YYYY'
-  //     ),
-  //     'day'
-  //   )
-  // }
-
-  const sort = payments => {
-    return [...payments].sort((p1, p2) =>
-      p1[detailsSorting.by as keyof Types.Payment] < p2[detailsSorting.by as keyof Types.Payment]
-        ? detailsSorting.as
-        : -detailsSorting.as
-    )
-  }
-
-  useEffect(() => {
-    setSelectedPayments(sort(payments))
-  }, [payments])
-
-  useEffect(() => {
-    setSelectedPayments(sort(selectedPayments))
-  }, [detailsSorting])
-
-  const deleteHandler = async () => {
-    try {
-      await fetch(`http://localhost:3030/${deleteCandidate}`, {
-        method: 'delete',
-        headers: {
-          Authorization: 'BEARER ' + token
-        }
-      })
-      setPayments(payments.filter(p => p._id !== deleteCandidate))
-      setDeleteCandidate('')
-      setIsModalOpened(false)
-    } catch (e) {
-      console.log(e.message)
-    }
-  }
-
-  const openDeleteModal = (_id: string) => {
-    setDeleteCandidate(_id)
-    setIsModalOpened(true)
   }
 
   return (
@@ -96,15 +60,13 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
                 </th>
               )
             })}
-            {/* {isToday() ? ( */}
             <th>
               <SortingHeader>{lang.ACTIONS}</SortingHeader>
             </th>
-            {/* ) : null} */}
           </tr>
         </thead>
         <tbody className={styles.tbody}>
-          {selectedPayments.map((payment, i) => {
+          {payments.map((payment, i) => {
             return (
               <tr key={i}>
                 <td>{i + 1}</td>
@@ -124,13 +86,11 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
                     <div>{paymentTypes[payment.type]}</div>
                   </div>
                 </td>
-                {/* {isToday() ? ( */}
                 <td>
                   <div className={styles.actions}>
                     <Close onClick={() => openDeleteModal(payment._id)} className={styles.close_icon} />
                   </div>
                 </td>
-                {/* ) : null} */}
               </tr>
             )
           })}
@@ -138,7 +98,7 @@ const DetailsTable = ({ payments }: { payments: Types.Payment[] }) => {
             <td>{lang.TOTAL}</td>
             <td />
             <td>
-              {selectedPayments
+              {payments
                 .reduce((acc, payment) => (acc += payment.value), 0)
                 .toLocaleString()
                 .replace(/^0$/, '-')}

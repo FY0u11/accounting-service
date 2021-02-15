@@ -1,4 +1,4 @@
-import { useLanguage } from '../../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import { Types } from '../../types'
 import styles from './YesCancelModal.module.css'
 import { Button, ModalWindow } from 'components'

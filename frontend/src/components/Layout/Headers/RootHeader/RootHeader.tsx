@@ -1,26 +1,18 @@
-import styles from './PageHeader.module.css'
-import { useRouter } from 'next/router'
-import { useLanguage } from '../../hooks/useLanguage'
-import { AppContext } from '../../context/AppContext'
+import styles from './RootHeader.module.css'
+import { useLanguage, useLogoutHandler } from 'hooks'
+import { AppContext } from '../../../../context/AppContext'
 import React, { useContext, useState } from 'react'
 import { Button, ModalWindow, PaymentForm } from 'components'
 
-type PageHeaderProps = {
+type RootHeaderProps = {
   children?: React.ReactNode
 }
 
-const PageHeader = ({ children }: PageHeaderProps) => {
-  const router = useRouter()
+const RootHeader = ({ children }: RootHeaderProps) => {
   const { lang } = useLanguage()
-  const { setUser, setToken, user } = useContext(AppContext)
+  const { user } = useContext(AppContext)
   const [isPaymentModalOpened, setIsPaymentModalOpened] = useState(false)
-
-  const logoutHandler = () => {
-    setUser(null)
-    setToken('')
-    window.localStorage.removeItem('token')
-    router.push('/auth')
-  }
+  const logoutHandler = useLogoutHandler()
 
   return (
     <>
@@ -47,4 +39,4 @@ const PageHeader = ({ children }: PageHeaderProps) => {
   )
 }
 
-export default PageHeader
+export default RootHeader

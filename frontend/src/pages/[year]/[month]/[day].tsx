@@ -1,9 +1,10 @@
-import { useLanguage } from '../../../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { DetailsHeader, DetailsTable, Layout } from 'components'
+import { Layout } from 'components'
+import { DetailsTableContainer } from 'containers'
 
 const DayDetails = () => {
   const router = useRouter()
@@ -12,7 +13,6 @@ const DayDetails = () => {
   const [selectedPayments, setSelectedPayments] = useState([])
 
   useEffect(() => {
-    if (!payments.length || !Object.keys(router.query).length) return
     const { day, month, year } = router.query
     setSelectedPayments(
       payments.filter(p => {
@@ -24,8 +24,8 @@ const DayDetails = () => {
   return (
     <>
       {user && payments.length ? (
-        <Layout title={lang.DOCUMENT_TITLE_DETAILS} HeaderComponent={<DetailsHeader />}>
-          <DetailsTable payments={selectedPayments} />
+        <Layout title={lang.DOCUMENT_TITLE_DETAILS} header="details">
+          <DetailsTableContainer payments={selectedPayments} />
         </Layout>
       ) : null}
     </>

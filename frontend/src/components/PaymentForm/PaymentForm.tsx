@@ -1,6 +1,5 @@
 import { MouseEvent, useState } from 'react'
-import { useAddPaymentHandler } from '../../hooks/useAddPaymentHandler'
-import { useLanguage } from '../../hooks/useLanguage'
+import { useAddPaymentHandler, useLanguage } from 'hooks'
 import { Types } from '../../types'
 import styles from './PaymentForm.module.css'
 import { Button, RadioInput, TextInput } from 'components'

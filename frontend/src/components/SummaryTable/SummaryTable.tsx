@@ -1,18 +1,26 @@
-import { useContext, useEffect, useState } from 'react'
 import { SortingHeader } from 'components'
 import styles from './SummaryTable.module.css'
 import Link from 'next/link'
-import { useLanguage } from '../../hooks/useLanguage'
+import { useLanguage } from 'hooks'
 import { Types } from '../../types'
-import { AppContext } from '../../context/AppContext'
 import moment from 'moment'
 
-// fixme: If go to details page, delete payment and press back button it will replace all payments with details payments
+type SummaryTableProps = {
+  payments: Types.SummaryPayment[]
+  selectedMonth: string
+  selectedYear: string
+  summarySorting: Types.Sorting
+  setSummarySorting: Types.SetState<Types.Sorting>
+}
 
-const SummaryTable = ({ payments }: { payments: Types.Payment[] }) => {
-  const [selectedPayments, setSelectedPayments] = useState([] as Types.SummaryPayment[])
+const SummaryTable = ({
+  payments,
+  selectedMonth,
+  selectedYear,
+  summarySorting,
+  setSummarySorting
+}: SummaryTableProps) => {
   const { lang } = useLanguage()
-  const { selectedMonth, selectedYear, summarySorting, setSummarySorting } = useContext(AppContext)
   const tableHeaders = {
     day: lang.DAY,
     cash: lang.CASH,
@@ -21,45 +29,6 @@ const SummaryTable = ({ payments }: { payments: Types.Payment[] }) => {
     kaspi: lang.KASPI,
     total: lang.TOTAL
   }
-
-  const sort = payments => {
-    return [...payments].sort((p1, p2) =>
-      p1[summarySorting.by as keyof Types.SummaryPayment] < p2[summarySorting.by as keyof Types.SummaryPayment]
-        ? summarySorting.as
-        : -summarySorting.as
-    )
-  }
-
-  useEffect(() => {
-    const daysMap = new Map()
-    payments.forEach(payment => {
-      const dt = new Date(payment.time)
-      const day = daysMap.get(dt.getDate())
-      if (day) {
-        day[payment.type] += payment.value
-        day.total += payment.value
-      } else {
-        const newP = {
-          day: dt.getDate(),
-          cash: 0,
-          bank: 0,
-          card: 0,
-          kaspi: 0,
-          total: 0
-        }
-        newP[payment.type] += payment.value
-        newP.total += payment.value
-        daysMap.set(dt.getDate(), newP)
-      }
-    })
-    const paymentsToSelect = Array.from(daysMap.values())
-    setSelectedPayments(sort(paymentsToSelect))
-  }, [payments])
-
-  useEffect(() => {
-    if (!selectedPayments.length) return
-    setSelectedPayments(sort(selectedPayments))
-  }, [summarySorting, selectedMonth])
 
   return (
     <div className={styles.container}>
@@ -78,7 +47,7 @@ const SummaryTable = ({ payments }: { payments: Types.Payment[] }) => {
           </tr>
         </thead>
         <tbody className={styles.tbody}>
-          {selectedPayments.map((payment, i) => {
+          {payments.map((payment, i) => {
             return (
               <Link key={i} href={`/${selectedYear}/${selectedMonth}/${payment.day}`}>
                 <tr
@@ -103,7 +72,7 @@ const SummaryTable = ({ payments }: { payments: Types.Payment[] }) => {
             {['cash', 'bank', 'card', 'kaspi', 'total'].map(i => {
               return (
                 <td key={i + 'total'}>
-                  {selectedPayments
+                  {payments
                     .reduce((acc, payment) => (acc += payment[i as keyof typeof payment]), 0)
                     .toLocaleString()
                     .replace(/^0$/, '-')}
