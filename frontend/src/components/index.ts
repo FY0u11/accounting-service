@@ -9,6 +9,7 @@ import SortingHeader from 'components/SortingHeader/SortingHeader'
 import SummaryTable from './SummaryTable/SummaryTable'
 import TextInput from './TextInput/TextInput'
 import YesCancelModal from './YesCancelModal/YesCancelModal'
+import EditPaymentForm from './EditPaymentForm/EditPaymentForm'
 
 export {
   Button,
@@ -21,5 +22,6 @@ export {
   SortingHeader,
   SummaryTable,
   TextInput,
-  YesCancelModal
+  YesCancelModal,
+  EditPaymentForm
 }

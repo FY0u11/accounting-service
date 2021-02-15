@@ -1,18 +1,22 @@
 import styles from './DetailsTable.module.css'
-import { Close } from '@material-ui/icons'
 import { useLanguage } from 'hooks'
 import { Types } from '../../types'
-import { AccountBalance, LocalAtm, CreditCard, MonetizationOn } from '@material-ui/icons'
-import { YesCancelModal, SortingHeader } from 'components'
+import { AccountBalance, LocalAtm, CreditCard, MonetizationOn, Edit, Close } from '@material-ui/icons'
+import { YesCancelModal, SortingHeader, ModalWindow, EditPaymentForm } from 'components'
+import React from 'react'
+import moment from 'moment'
 
 type DetailsTableProps = {
   payments: Types.Payment[]
   detailsSorting: Types.Sorting
   setDetailsSorting: Types.SetState<Types.Sorting>
   deleteHandler: () => void
-  openDeleteModal: (id: string) => void
-  isModalOpened: boolean
-  setIsModalOpened: Types.SetState<boolean>
+  isDeleteModalOpened: boolean
+  setIsDeleteModalOpened: Types.SetState<boolean>
+  isEditModalOpened: boolean
+  setIsEditModalOpened: Types.SetState<boolean>
+  selectedPaymentId: string
+  setSelectedPaymentId: Types.SetState<string>
 }
 
 const DetailsTable = ({
@@ -20,9 +24,12 @@ const DetailsTable = ({
   detailsSorting,
   setDetailsSorting,
   deleteHandler,
-  openDeleteModal,
-  isModalOpened,
-  setIsModalOpened
+  isDeleteModalOpened,
+  setIsDeleteModalOpened,
+  isEditModalOpened,
+  setIsEditModalOpened,
+  selectedPaymentId,
+  setSelectedPaymentId
 }: DetailsTableProps) => {
   const { lang } = useLanguage()
   const paymentTypes = {
@@ -41,14 +48,20 @@ const DetailsTable = ({
     <div className={styles.container}>
       <YesCancelModal
         title={lang.CONFIRM_DELETE}
-        isModalOpened={isModalOpened}
-        setIsModalOpened={setIsModalOpened}
+        isModalOpened={isDeleteModalOpened}
+        setIsModalOpened={setIsDeleteModalOpened}
         yesClickHandler={deleteHandler}
       />
+      <ModalWindow isModalOpened={isEditModalOpened} setIsModalOpened={setIsEditModalOpened} title={lang.EDIT_PAYMENT}>
+        <EditPaymentForm
+          selectedPayment={payments.find(p => p._id === selectedPaymentId)}
+          setIsModalOpened={setIsEditModalOpened}
+        />
+      </ModalWindow>
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            <th>
+            <th className={styles.desktop_th}>
               <SortingHeader>{lang.NUMBER}</SortingHeader>
             </th>
             {Object.keys(tableHeaders).map(type => {
@@ -69,8 +82,11 @@ const DetailsTable = ({
           {payments.map((payment, i) => {
             return (
               <tr key={i}>
-                <td>{i + 1}</td>
-                <td>{new Date(Date.parse(payment.time)).toLocaleString('ru')}</td>
+                <td className={styles.desktop_td}>{i + 1}</td>
+                <td>
+                  <div className={styles.desktop}>{moment(payment.time).format('DD.MM.YYYY, HH:mm:ss')}</div>
+                  <div className={styles.mobile}>{moment(payment.time).format('HH:mm')}</div>
+                </td>
                 <td>{payment.value ? payment.value.toLocaleString() : '-'}</td>
                 <td>
                   <div className={styles.type}>
@@ -83,12 +99,25 @@ const DetailsTable = ({
                     ) : (
                       <MonetizationOn className={styles.icon} />
                     )}
-                    <div>{paymentTypes[payment.type]}</div>
+                    <div className={styles.desktop}>{paymentTypes[payment.type]}</div>
                   </div>
                 </td>
                 <td>
                   <div className={styles.actions}>
-                    <Close onClick={() => openDeleteModal(payment._id)} className={styles.close_icon} />
+                    <Edit
+                      onClick={() => {
+                        setSelectedPaymentId(payment._id)
+                        setIsEditModalOpened(true)
+                      }}
+                      className={styles.close_icon}
+                    />
+                    <Close
+                      onClick={() => {
+                        setSelectedPaymentId(payment._id)
+                        setIsDeleteModalOpened(true)
+                      }}
+                      className={styles.close_icon}
+                    />
                   </div>
                 </td>
               </tr>

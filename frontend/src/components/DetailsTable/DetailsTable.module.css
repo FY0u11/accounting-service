@@ -65,3 +65,36 @@
 .icon {
   margin-right: 1rem;
 }
+
+.desktop {
+  display: none;
+}
+
+.mobile {
+  display: block;
+}
+
+.desktop_th {
+  display: none;
+}
+
+.desktop_td {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .desktop {
+    display: block;
+  }
+  .mobile {
+    display: none;
+  }
+
+  .desktop_th {
+    display: table-cell;
+  }
+
+  .desktop_td {
+    display: table-cell;
+  }
+}

@@ -40,5 +40,7 @@ export default {
   MONTHS_OCT: 'Октябрь',
   MONTHS_NOV: 'Ноябрь',
   MONTHS_DEC: 'Декабрь',
-  LOGOUT: 'Выйти'
+  LOGOUT: 'Выйти',
+  READY: 'Готово',
+  EDIT_PAYMENT: 'Редактирование платежа'
 }

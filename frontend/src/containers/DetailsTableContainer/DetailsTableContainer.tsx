@@ -5,10 +5,11 @@ import { DetailsTable } from 'components'
 import { useDeletePaymentHandler } from 'hooks'
 
 const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
-  const [isModalOpened, setIsModalOpened] = useState(false)
+  const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false)
+  const [isEditModalOpened, setIsEditModalOpened] = useState(false)
   const { detailsSorting, setDetailsSorting } = useContext(AppContext)
   const [selectedPayments, setSelectedPayments] = useState([] as Types.Payment[])
-  const [deleteCandidate, setDeleteCandidate] = useState('')
+  const [selectedPaymentId, setSelectedPaymentId] = useState('')
   const deletePaymentHandler = useDeletePaymentHandler()
 
   const sort = payments => {
@@ -28,14 +29,9 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   }, [detailsSorting])
 
   const deleteHandler = async () => {
-    await deletePaymentHandler(deleteCandidate)
-    setDeleteCandidate('')
-    setIsModalOpened(false)
-  }
-
-  const openDeleteModal = (_id: string) => {
-    setDeleteCandidate(_id)
-    setIsModalOpened(true)
+    await deletePaymentHandler(selectedPaymentId)
+    setSelectedPaymentId('')
+    setIsDeleteModalOpened(false)
   }
 
   return (
@@ -44,9 +40,12 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
       detailsSorting={detailsSorting}
       setDetailsSorting={setDetailsSorting}
       deleteHandler={deleteHandler}
-      openDeleteModal={openDeleteModal}
-      isModalOpened={isModalOpened}
-      setIsModalOpened={setIsModalOpened}
+      isDeleteModalOpened={isDeleteModalOpened}
+      setIsDeleteModalOpened={setIsDeleteModalOpened}
+      setIsEditModalOpened={setIsEditModalOpened}
+      isEditModalOpened={isEditModalOpened}
+      selectedPaymentId={selectedPaymentId}
+      setSelectedPaymentId={setSelectedPaymentId}
     />
   )
 }

@@ -5,11 +5,13 @@ import deletePaymentController from '../controllers/deletePayment.controller'
 import getUserController from '../controllers/getUser.controller'
 import addUserController from '../controllers/addUser.controller'
 import authController from '../controllers/auth.controller'
+import editPaymentController from '../controllers/editPayment.controller'
 
 const router = Router()
 
 router.get('/', getPaymentsController)
 router.post('/', addPaymentController)
+router.put('/:id', editPaymentController)
 router.delete('/:id', deletePaymentController)
 router.get('/user/:id', getUserController)
 router.post('/users', addUserController)

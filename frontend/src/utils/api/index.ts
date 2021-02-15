@@ -55,3 +55,19 @@ export const authenticate = async (username: string, password: string) => {
     console.log(e.message)
   }
 }
+
+export const editPayment = async (id: string, payment: Types.PaymentForCreate, token: string) => {
+  try {
+    const response = await fetch('http://localhost:3030/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'BEARER ' + token
+      },
+      body: JSON.stringify(payment)
+    })
+    return await response.json()
+  } catch (e) {
+    console.log(e.message)
+  }
+}
