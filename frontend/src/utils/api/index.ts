@@ -2,7 +2,7 @@ import { Types } from '../../types'
 
 export const deletePayment = async (id: string, token: string) => {
   try {
-    const response = await fetch(`http://localhost:3030/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`, {
       method: 'delete',
       headers: {
         Authorization: 'BEARER ' + token
@@ -16,7 +16,7 @@ export const deletePayment = async (id: string, token: string) => {
 
 export const addPayment = async (payment: Types.PaymentForCreate, token: string) => {
   try {
-    const response = await fetch('http://localhost:3030', {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const addPayment = async (payment: Types.PaymentForCreate, token: string)
 
 export const getPayments = async (token: string) => {
   try {
-    const response = await fetch('http://localhost:3030', {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       headers: {
         Authorization: 'BEARER ' + token
       }
@@ -45,7 +45,7 @@ export const getPayments = async (token: string) => {
 
 export const authenticate = async (username: string, password: string) => {
   try {
-    const response = await fetch('http://localhost:3030/auth', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -58,7 +58,7 @@ export const authenticate = async (username: string, password: string) => {
 
 export const editPayment = async (id: string, payment: Types.PaymentForCreate, token: string) => {
   try {
-    const response = await fetch('http://localhost:3030/' + id, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

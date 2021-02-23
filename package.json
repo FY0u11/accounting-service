@@ -4,7 +4,8 @@
   "description": "This project is accounting service",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm --prefix backend/ run dev\" \"npm --prefix frontend run dev\""
+    "dev": "concurrently \"npm --prefix backend/ run dev\" \"npm --prefix frontend run dev\"",
+    "start": "concurrently \"npm --prefix backend/ run start\" \"npm --prefix frontend run start\""
   },
   "repository": {
     "type": "git",

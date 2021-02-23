@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "tsc && node dist",
     "watch": "tsc -w",
     "server": "nodemon dist",
-    "dev": "concurrently \"npm run watch\" \"npm run server\"",
-    "tsc": "tsc --init"
+    "dev": "concurrently \"npm run watch\" \"npm run server\""
   },
   "keywords": [],
   "author": "",
