@@ -29,7 +29,7 @@ const Layout = ({ title = 'default page', header = null, children = null }: Layo
       <main className={styles.main}>
         <div className="content">{children}</div>
       </main>
-      <footer className={styles.footer}>Sergey Strigin &copy; darkauron1997@gmail.com</footer>
+      <footer className={styles.footer}>&copy; Sergey Strigin, 2020 - {new Date().getFullYear()}</footer>
     </div>
   )
 }
