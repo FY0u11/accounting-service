@@ -1,25 +1,22 @@
-import Users from '../models/Users'
+import { User, UserDoc } from '../models/User'
 import { sign } from 'jsonwebtoken'
-import { get } from 'config'
 import { config } from 'dotenv'
 config()
 
-export default async (user: Types.User) => {
-  try {
-    const candidate = ((await Users.findOne({
-      username: user.username
-    })) as any) as Types.User
+export const authService = async (user: UserDoc) => {
+  const candidate = await User.findOne({ username: user.username })
 
-    if (!candidate) return null
-
-    if (candidate.password !== user.password) return null
-
-    const token = sign({ id: candidate._id, username: candidate.username }, process.env.SECRET, {
+  if (!candidate || candidate.password !== user.password)
+    throw {
+      status: 400,
+      success: false,
+      message: 'Invalid login or password'
+    }
+  const tokenSecret = process.env.SECRET || ''
+  return {
+    data: sign({ id: candidate._id, username: candidate.username, role: candidate.role }, tokenSecret, {
       expiresIn: '8h'
-    })
-
-    return token
-  } catch (e) {
-    return { error: e.message }
+    }),
+    success: true
   }
 }

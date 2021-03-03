@@ -1,3 +1,5 @@
+@import 'node_modules/materialize-css/dist/css/materialize.min.css';
+
 :root {
   --primary-color: #673ab7;
   --dark-primary-color: #512da8;
@@ -18,5 +20,12 @@ body {
   background: white;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.outcome {
+  color: red !important;
 }

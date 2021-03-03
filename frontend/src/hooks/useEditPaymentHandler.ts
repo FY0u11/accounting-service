@@ -1,13 +1,13 @@
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { Types } from '../types'
-import { editPayment } from 'api'
+import { updatePayment } from 'api'
+import { actions } from '../store/actions'
 
 export const useEditPaymentHandler = () => {
-  const { payments, setPayments, token } = useContext(AppContext)
+  const { state, setState } = useContext(AppContext)
   return async (id: string, payment: Types.PaymentForCreate) => {
-    await editPayment(id, payment, token)
-    const editedPayment = payments.find(p => p._id === id)
-    setPayments([...payments.filter(p => p._id !== id), { ...editedPayment, ...payment }])
+    const newPayment = await updatePayment(id, payment, state.user.token)
+    setState(actions.setPayments([...state.payments.filter(p => p._id !== id), newPayment]))
   }
 }

@@ -1,37 +1,15 @@
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useRouter } from 'next/router'
+import { actions } from '../store/actions'
 
 export const useLogoutHandler = () => {
-  const {
-    setToken,
-    setUser,
-    setPayments,
-    setMonths,
-    setYears,
-    setSelectedMonth,
-    setSelectedYear,
-    setSummarySorting,
-    setDetailsSorting
-  } = useContext(AppContext)
+  const { setState } = useContext(AppContext)
   const router = useRouter()
-  return () => {
-    setUser(null)
-    setSummarySorting({
-      by: 'day',
-      as: 1
-    })
-    setDetailsSorting({
-      by: 'time',
-      as: 1
-    })
-    setMonths([])
-    setYears([])
-    setSelectedYear('')
-    setSelectedMonth('')
-    setPayments([])
-    setToken('')
+  return async () => {
+    setState(actions.clearState())
     window.localStorage.removeItem('token')
-    router.push('/auth')
+    await router.push('/auth')
+    setState(actions.setIsLoading(false))
   }
 }

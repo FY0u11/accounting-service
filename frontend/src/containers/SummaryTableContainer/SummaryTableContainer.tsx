@@ -5,13 +5,13 @@ import { AppContext } from '../../context/AppContext'
 
 const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   const [selectedPayments, setSelectedPayments] = useState([] as Types.SummaryPayment[])
-  const { selectedMonth, selectedYear, summarySorting, setSummarySorting } = useContext(AppContext)
+  const { state } = useContext(AppContext)
 
   const sort = payments => {
     return [...payments].sort((p1, p2) =>
-      p1[summarySorting.by as keyof Types.SummaryPayment] < p2[summarySorting.by as keyof Types.SummaryPayment]
-        ? summarySorting.as
-        : -summarySorting.as
+      (p1[state.app.summarySorting.by] ?? '') < (p2[state.app.summarySorting.by] ?? '')
+        ? state.app.summarySorting.as
+        : -state.app.summarySorting.as
     )
   }
 
@@ -21,20 +21,15 @@ const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
       const dt = new Date(payment.time)
       const day = daysMap.get(dt.getDate())
       if (day) {
-        day[payment.type] += payment.value
+        day[payment.ptype.name] ??= 0
+        day[payment.ptype.name] += payment.value
         day.total += payment.value
       } else {
-        const newP = {
+        daysMap.set(dt.getDate(), {
           day: dt.getDate(),
-          cash: 0,
-          bank: 0,
-          card: 0,
-          kaspi: 0,
-          total: 0
-        }
-        newP[payment.type] += payment.value
-        newP.total += payment.value
-        daysMap.set(dt.getDate(), newP)
+          [payment.ptype.name]: payment.value,
+          total: payment.value
+        })
       }
     })
     const paymentsToSelect = Array.from(daysMap.values())
@@ -44,17 +39,9 @@ const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   useEffect(() => {
     if (!selectedPayments.length) return
     setSelectedPayments(sort(selectedPayments))
-  }, [summarySorting, selectedMonth])
+  }, [state.app.summarySorting, state.app.chosenMonth])
 
-  return (
-    <SummaryTable
-      payments={selectedPayments}
-      selectedMonth={selectedMonth}
-      selectedYear={selectedYear}
-      setSummarySorting={setSummarySorting}
-      summarySorting={summarySorting}
-    />
-  )
+  return <SummaryTable payments={selectedPayments} />
 }
 
 export default SummaryTableContainer

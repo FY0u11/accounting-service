@@ -7,17 +7,21 @@ import { useDeletePaymentHandler } from 'hooks'
 const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false)
   const [isEditModalOpened, setIsEditModalOpened] = useState(false)
-  const { detailsSorting, setDetailsSorting } = useContext(AppContext)
+  const { state } = useContext(AppContext)
   const [selectedPayments, setSelectedPayments] = useState([] as Types.Payment[])
   const [selectedPaymentId, setSelectedPaymentId] = useState('')
   const deletePaymentHandler = useDeletePaymentHandler()
 
   const sort = payments => {
-    return [...payments].sort((p1, p2) =>
-      p1[detailsSorting.by as keyof Types.Payment] < p2[detailsSorting.by as keyof Types.Payment]
-        ? detailsSorting.as
-        : -detailsSorting.as
-    )
+    return [...payments].sort((p1, p2) => {
+      if (state.app.detailsSorting.by !== 'ptype') {
+        return p1[state.app.detailsSorting.by] < p2[state.app.detailsSorting.by]
+          ? state.app.detailsSorting.as
+          : -state.app.detailsSorting.as
+      } else {
+        return p1.ptype.name < p2.ptype.name ? state.app.detailsSorting.as : -state.app.detailsSorting.as
+      }
+    })
   }
 
   useEffect(() => {
@@ -26,10 +30,10 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
 
   useEffect(() => {
     setSelectedPayments(sort(selectedPayments))
-  }, [detailsSorting])
+  }, [state.app.detailsSorting])
 
-  const deleteHandler = async () => {
-    await deletePaymentHandler(selectedPaymentId)
+  const deleteHandler = () => {
+    deletePaymentHandler(selectedPaymentId)
     setSelectedPaymentId('')
     setIsDeleteModalOpened(false)
   }
@@ -37,8 +41,6 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   return (
     <DetailsTable
       payments={selectedPayments}
-      detailsSorting={detailsSorting}
-      setDetailsSorting={setDetailsSorting}
       deleteHandler={deleteHandler}
       isDeleteModalOpened={isDeleteModalOpened}
       setIsDeleteModalOpened={setIsDeleteModalOpened}

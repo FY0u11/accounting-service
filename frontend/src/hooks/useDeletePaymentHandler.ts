@@ -1,11 +1,12 @@
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
-import { deletePayment } from 'api'
+import { deleteOnePayment } from 'api'
+import { actions } from '../store/actions'
 
 export const useDeletePaymentHandler = () => {
-  const { payments, setPayments, token } = useContext(AppContext)
+  const { state, setState } = useContext(AppContext)
   return async (id: string) => {
-    await deletePayment(id, token)
-    setPayments(payments.filter(p => p._id !== id))
+    await deleteOnePayment(id, state.user.token)
+    setState(actions.setPayments(state.payments.filter(p => p._id !== id)))
   }
 }

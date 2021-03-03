@@ -1,20 +1,14 @@
 import { Router } from 'express'
-import addPaymentController from '../controllers/addPayment.controller'
-import getPaymentsController from '../controllers/getPayments.controller'
-import deletePaymentController from '../controllers/deletePayment.controller'
-import getUserController from '../controllers/getUser.controller'
-import addUserController from '../controllers/addUser.controller'
-import authController from '../controllers/auth.controller'
-import editPaymentController from '../controllers/editPayment.controller'
+import { paymentsController } from '../controllers/payments.controller'
+import { ptypesController } from '../controllers/ptypes.controller'
+import { authController } from '../controllers/auth.controller'
 
 const router = Router()
 
-router.get('/', getPaymentsController)
-router.post('/', addPaymentController)
-router.put('/:id', editPaymentController)
-router.delete('/:id', deletePaymentController)
-router.get('/user/:id', getUserController)
-router.post('/users', addUserController)
-router.post('/auth', authController)
+router.route('/payments').get(paymentsController.getAll).post(paymentsController.create)
+router.route('/payments/:id').put(paymentsController.update).delete(paymentsController.deleteOne)
+router.route('/ptypes').get(ptypesController.getAll).post(ptypesController.create)
+router.route('/ptypes/:id').put(ptypesController.update).delete(ptypesController.deleteOne)
+router.route('/auth').post(authController)
 
 export default router

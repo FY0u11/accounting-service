@@ -5,24 +5,17 @@ import { AppContext } from '../context/AppContext'
 import moment from 'moment'
 import { Layout } from 'components'
 import { SummaryTableContainer } from 'containers'
+import { actions } from '../store/actions'
 
 const HomePage = () => {
   const { lang } = useLanguage()
-  const {
-    token,
-    payments,
-    setMonths,
-    setYears,
-    setSelectedYear,
-    setSelectedMonth,
-    selectedYear,
-    selectedMonth
-  } = useContext(AppContext)
+  const { state, setState } = useContext(AppContext)
   const [selectedPayments, setSelectedPayments] = useState([])
 
   const getYearMonths = (year: string): [string, string[]] => {
+    if (!state.payments.length) return ['', []]
     const monthsSet = new Set(
-      payments
+      state.payments
         .filter(p => moment(p.time).isSame(moment(year, 'YYYY'), 'year'))
         .map(p => new Date(p.time).getMonth() + 1)
     )
@@ -32,10 +25,10 @@ const HomePage = () => {
   }
 
   const setPayments = () => {
-    if (!payments.length) return
+    if (!state.payments.length) return
     setSelectedPayments(
-      payments.filter(p => {
-        return moment(p.time).isSame(moment(`${selectedYear}.${selectedMonth}`, 'YYYY.MM'), 'month')
+      state.payments.filter(p => {
+        return moment(p.time).isSame(moment(`${state.app.chosenYear}.${state.app.chosenMonth}`, 'YYYY.MM'), 'month')
       })
     )
   }
@@ -43,34 +36,38 @@ const HomePage = () => {
   const sort = (arr: string[]) => arr.sort((a, b) => +a - +b)
 
   useEffect(() => {
-    if (!payments.length) return
-    const yearsSet = new Set(payments.map(p => new Date(p.time).getFullYear()))
+    if (!state.payments.length) return
+    const yearsSet = new Set(state.payments.map(p => new Date(p.time).getFullYear()))
     const years = Array.from(yearsSet)
     const lastYear = Math.max(...years) + ''
-    if (selectedYear && selectedMonth && years.includes(+selectedYear)) {
+    if (state.app.chosenYear && state.app.chosenMonth && years.includes(+state.app.chosenYear)) {
       setPayments()
       return
     }
-    setSelectedYear(lastYear)
-    setYears(sort(years.map(v => '' + v)))
-  }, [payments])
+    setState(actions.setAppChosenYear(lastYear))
+    setState(actions.setAppYears(sort(years.map(v => '' + v))))
+  }, [state.payments])
 
   useEffect(() => {
-    if (!selectedYear) return
-    const [lastMonth, months] = getYearMonths(selectedYear)
-    const monthToSelect = selectedMonth ? (months.includes(selectedMonth) ? selectedMonth : lastMonth) : lastMonth
-    monthToSelect === selectedMonth ? setPayments() : setSelectedMonth(monthToSelect)
-    setMonths(sort(months))
-  }, [selectedYear])
+    if (!state.app.chosenYear) return
+    const [lastMonth, months] = getYearMonths(state.app.chosenYear)
+    const monthToSelect = state.app.chosenMonth
+      ? months.includes(state.app.chosenMonth)
+        ? state.app.chosenMonth
+        : lastMonth
+      : lastMonth
+    monthToSelect === state.app.chosenMonth ? setPayments() : setState(actions.setAppChosenMonth(monthToSelect))
+    setState(actions.setAppMonths(sort(months)))
+  }, [state.app.chosenYear])
 
   useEffect(() => {
-    if (!selectedMonth) return
+    if (!state.app.chosenMonth) return
     setPayments()
-  }, [selectedMonth])
+  }, [state.app.chosenMonth])
 
   return (
-    <Layout title={lang.DOCUMENT_TITLE_HOME} header="main">
-      {token && selectedPayments.length ? <SummaryTableContainer payments={selectedPayments} /> : null}
+    <Layout title={lang.DOCUMENT_TITLE_HOME}>
+      <SummaryTableContainer payments={selectedPayments} />
     </Layout>
   )
 }

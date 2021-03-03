@@ -1,7 +1,6 @@
-// import styles from './RadioInput.module.css'
-
 import React from 'react'
 import { nF } from 'utils'
+import styles from './RadioInput.module.css'
 
 type RadioInputProps = {
   onChangeHandler?: () => void
@@ -21,8 +20,15 @@ const RadioInput = ({
   return (
     <p>
       <label htmlFor={id}>
-        <input name={group} type="radio" id={id} defaultChecked={isChecked} onChange={onChangeHandler} />
-        <span>{children}</span>
+        <input
+          name={group}
+          type="radio"
+          id={id}
+          defaultChecked={isChecked}
+          onChange={onChangeHandler}
+          className={styles.input}
+        />
+        <span className={styles.value}>{children}</span>
       </label>
     </p>
   )

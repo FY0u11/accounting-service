@@ -42,5 +42,13 @@ export default {
   MONTHS_DEC: 'Декабрь',
   LOGOUT: 'Выйти',
   READY: 'Готово',
-  EDIT_PAYMENT: 'Редактирование платежа'
+  EDIT_PAYMENT: 'Редактирование платежа',
+  SETTINGS: 'Настройки',
+  INCOME: 'Приход',
+  OUTCOME: 'Расход',
+  ADMINING: 'Администрирование',
+  BACK_TO_HOME: 'На главную',
+  NEED_RELOAD: 'Администратор сайта внёс изменения в работу сайта, страница будет перезагружена.',
+  // Backend messages
+  'Invalid login or password': 'Неверный логин или пароль'
 }

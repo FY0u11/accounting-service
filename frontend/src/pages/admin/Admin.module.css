@@ -1,0 +1,12 @@
+.add_new_ptype_form {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#tbody {}
+
+.ghost {
+    background-color: #c6c6c6;
+    opacity: .5;
+}

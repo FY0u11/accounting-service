@@ -1,11 +1,10 @@
 import React, { MouseEvent } from 'react'
 import classNames from 'classnames'
-import styles from './Button.module.css'
 import { nF } from 'utils'
 
 type ButtonProps = {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-  children?: string
+  children?: React.ReactNode
   disabled?: boolean
 }
 
@@ -13,10 +12,14 @@ const Button = ({ onClick = nF, children = 'button', disabled = false }: ButtonP
   return (
     <button
       className={classNames({
-        [styles.button]: true,
-        [styles.disabled]: disabled
+        disabled: disabled,
+        btn: true,
+        'grey darken-4': true
       })}
-      onClick={onClick}
+      onClick={e => {
+        e.preventDefault()
+        onClick(e)
+      }}
     >
       <span>{children}</span>
     </button>

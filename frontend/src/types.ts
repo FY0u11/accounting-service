@@ -1,16 +1,36 @@
 import { Dispatch, SetStateAction } from 'react'
+import { Socket } from 'socket.io-client'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Types {
-  export type PaymentTypes = 'cash' | 'bank' | 'card' | 'kaspi'
+  export type Ptype = {
+    _id?: string
+    name: string
+    isActive?: boolean
+    payments: [string]
+    sort: number
+  }
+  export type PtypeToUpdate = {
+    _id?: string
+    name?: string
+    isActive?: boolean
+    sort?: number
+  }
+  export type PtypeToCreate = {
+    name: string
+    isActive?: boolean
+  }
   export type Payment = {
     _id: string
     time: string
-    type: PaymentTypes
     value: number
+    ptype: Ptype
+    user?: {
+      username: string
+    }
   }
   export type PaymentForCreate = {
-    type: PaymentTypes
+    ptype: string
     value: number
   }
   export type SetState<T> = Dispatch<SetStateAction<T>>
@@ -20,14 +40,14 @@ export namespace Types {
   }
   export type SummaryPayment = {
     day: number
-    cash: number
-    card: number
-    bank: number
-    kaspi: number
     total: number
+    [key: string]: unknown
   }
   export type User = {
     id: string
+    role: 'admin' | 'user'
     username: string
+    socket: Socket
+    token: string
   }
 }

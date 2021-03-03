@@ -1,0 +1,5 @@
+.container {
+    padding: 0 1rem 0 2rem;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+}

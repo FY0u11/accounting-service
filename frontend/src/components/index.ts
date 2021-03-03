@@ -10,6 +10,9 @@ import SummaryTable from './SummaryTable/SummaryTable'
 import TextInput from './TextInput/TextInput'
 import YesCancelModal from './YesCancelModal/YesCancelModal'
 import EditPaymentForm from './EditPaymentForm/EditPaymentForm'
+import PtypeRow from '../adminPanel/components/PtypeRow/PtypeRow'
+import Table from './Table/Table'
+import AppLoader from './AppLoader/AppLoader'
 
 export {
   Button,
@@ -23,5 +26,8 @@ export {
   SummaryTable,
   TextInput,
   YesCancelModal,
-  EditPaymentForm
+  EditPaymentForm,
+  PtypeRow,
+  Table,
+  AppLoader
 }

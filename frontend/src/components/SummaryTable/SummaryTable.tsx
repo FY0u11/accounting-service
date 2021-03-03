@@ -1,87 +1,90 @@
-import { SortingHeader } from 'components'
+import { SortingHeader, Table } from 'components'
 import styles from './SummaryTable.module.css'
 import Link from 'next/link'
 import { useLanguage } from 'hooks'
 import { Types } from '../../types'
 import moment from 'moment'
+import { useContext } from 'react'
+import { AppContext } from '../../context/AppContext'
 
 type SummaryTableProps = {
   payments: Types.SummaryPayment[]
-  selectedMonth: string
-  selectedYear: string
-  summarySorting: Types.Sorting
-  setSummarySorting: Types.SetState<Types.Sorting>
 }
 
-const SummaryTable = ({
-  payments,
-  selectedMonth,
-  selectedYear,
-  summarySorting,
-  setSummarySorting
-}: SummaryTableProps) => {
+const SummaryTable = ({ payments }: SummaryTableProps) => {
   const { lang } = useLanguage()
-  const tableHeaders = {
-    day: lang.DAY,
-    cash: lang.CASH,
-    bank: lang.BANK,
-    card: lang.CARD,
-    kaspi: lang.KASPI,
-    total: lang.TOTAL
-  }
+  const { state } = useContext(AppContext)
+  const totalValue = payments.reduce((acc, payment) => (acc += +payment.total), 0)
+
+  // const paymentTypes = state.ptypes.map(ptype => ptype.name)
 
   return (
     <div className={styles.container}>
-      <table className={styles.table}>
-        <thead className={styles.thead}>
+      <Table
+        trHover={true}
+        tbodyId={styles.tbody}
+        theadId={styles.thead}
+        thead={
           <tr>
-            {Object.keys(tableHeaders).map(type => {
+            <th>
+              <SortingHeader by={'day'}>{lang.DAY}</SortingHeader>
+            </th>
+            {state.ptypes.map((ptype, i) => (
+              <th key={i}>
+                <SortingHeader by={ptype.name}>{ptype.name}</SortingHeader>
+              </th>
+            ))}
+            <th>
+              <SortingHeader by={'total'}>{lang.TOTAL}</SortingHeader>
+            </th>
+          </tr>
+        }
+        tbody={
+          <>
+            {payments.map((payment, i) => {
               return (
-                <th key={type + 'header'}>
-                  <SortingHeader sorting={summarySorting} setSorting={setSummarySorting} by={type}>
-                    {tableHeaders[type as keyof typeof tableHeaders]}
-                  </SortingHeader>
-                </th>
+                <Link key={i} href={`/details/${state.app.chosenYear}/${state.app.chosenMonth}/${payment.day}`}>
+                  <tr
+                    className={
+                      moment().isSame(
+                        moment(`${payment.day}/${state.app.chosenMonth}/${state.app.chosenYear}`, 'DD/MM/YYYY'),
+                        'day'
+                      )
+                        ? styles.today
+                        : ''
+                    }
+                  >
+                    <td>{payment.day}</td>
+                    {state.ptypes.map((ptype, i) => (
+                      <td key={i + 'td'} className={payment[ptype.name] < 0 ? 'outcome' : null}>
+                        {payment[ptype.name] ? payment[ptype.name].toLocaleString() : '-'}
+                      </td>
+                    ))}
+                    <td className={payment.total < 0 ? 'outcome' : null}>
+                      {payment.total ? payment.total.toLocaleString() : '-'}
+                    </td>
+                  </tr>
+                </Link>
               )
             })}
-          </tr>
-        </thead>
-        <tbody className={styles.tbody}>
-          {payments.map((payment, i) => {
-            return (
-              <Link key={i} href={`/${selectedYear}/${selectedMonth}/${payment.day}`}>
-                <tr
-                  className={
-                    moment().isSame(moment(`${payment.day}/${selectedMonth}/${selectedYear}`, 'DD/MM/YYYY'), 'day')
-                      ? styles.today
-                      : ''
-                  }
-                >
-                  <td>{payment.day}</td>
-                  <td>{payment.cash ? payment.cash.toLocaleString() : '-'}</td>
-                  <td>{payment.bank ? payment.bank.toLocaleString() : '-'}</td>
-                  <td>{payment.card ? payment.card.toLocaleString() : '-'}</td>
-                  <td>{payment.kaspi ? payment.kaspi.toLocaleString() : '-'}</td>
-                  <td>{payment.total ? payment.total.toLocaleString() : '-'}</td>
-                </tr>
-              </Link>
-            )
-          })}
-          <tr className={styles.total_by}>
-            <td>{lang.TOTAL}</td>
-            {['cash', 'bank', 'card', 'kaspi', 'total'].map(i => {
-              return (
-                <td key={i + 'total'}>
-                  {payments
-                    .reduce((acc, payment) => (acc += payment[i as keyof typeof payment]), 0)
-                    .toLocaleString()
-                    .replace(/^0$/, '-')}
-                </td>
-              )
-            })}
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td>{lang.TOTAL}</td>
+              {state.ptypes.map((ptype, i) => {
+                const total = payments.reduce(
+                  (acc, payment) => (acc += payment[ptype.name] ? +payment[ptype.name] : 0),
+                  0
+                )
+                return (
+                  <td key={i + 'total'} className={total < 0 ? 'outcome' : null}>
+                    {total.toLocaleString().replace(/^0$/, '-')}
+                  </td>
+                )
+              })}
+              <td className={totalValue < 0 ? 'outcome' : null}>{totalValue.toLocaleString().replace(/^0$/, '-')}</td>
+            </tr>
+          </>
+        }
+      />
     </div>
   )
 }

@@ -2,97 +2,79 @@ import NProgress from 'nprogress'
 import Router, { useRouter } from 'next/router'
 import '../styles/default.css'
 import 'nprogress/nprogress.css'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { AppProps } from 'next/app'
 import { AppContext } from '../context/AppContext'
-import { Types } from '../types'
-import { verify } from 'jsonwebtoken'
-import { getPayments } from 'api'
+import { io } from 'socket.io-client'
+import { initialState, reducer } from '../store/reducers'
+import { actions } from '../store/actions'
+import { getTokenPayload } from 'utils'
+import { AppLoader } from 'components'
+import { getActivePtypes, getAllPayments } from 'api'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [token, setToken] = useState('')
-  const [payments, setPayments] = useState<Types.Payment[]>([])
-  const [user, setUser] = useState<Types.User | null>(null)
-  const [months, setMonths] = useState([] as string[])
-  const [years, setYears] = useState([] as string[])
-  const [selectedMonth, setSelectedMonth] = useState('')
-  const [selectedYear, setSelectedYear] = useState('')
-  const [summarySorting, setSummarySorting] = useState({
-    by: 'day',
-    as: 1
-  } as Types.Sorting)
-  const [detailsSorting, setDetailsSorting] = useState({
-    by: 'time',
-    as: 1
-  } as Types.Sorting)
-
+  const [state, setState] = useReducer(reducer, initialState)
   const router = useRouter()
-
-  const getTokenPayload = (token: string) => {
-    try {
-      const jwtSecret = process.env.NEXT_PUBLIC_SECRET
-      if (!jwtSecret) {
-        console.log('Missing NEXT_PUBLIC_SECRET in .env.local')
+  useEffect(() => {
+    (async () => {
+      if (window) await import('../../node_modules/materialize-css/dist/js/materialize.min')
+      const token = window.localStorage.getItem('token')
+      if (!token) {
+        await router.push('/auth')
+        setState(actions.setIsLoading(false))
         return
       }
-      return verify(token ?? '', jwtSecret) as {
-        id: string
-        username: string
-      }
-    } catch (e) {
-      window.localStorage.removeItem('token')
-      router.push('/auth')
-    }
-  }
-
-  useEffect(() => {
-    ;(async () => {
-      const token = window.localStorage.getItem('token')
-      const payload = getTokenPayload(token)
-      if (!payload) return
-      setUser({ id: payload.id, username: payload.username })
-      setToken(token ?? '')
+      setState(actions.setUserToken(token))
     })()
   }, [])
 
   useEffect(() => {
+    if (!state.user.token) return
+    setState(actions.setIsLoading(true))
     ;(async () => {
-      if (!token) return
-      const payload = getTokenPayload(token)
-      if (!payload) return
-      setUser({ id: payload.id, username: payload.username })
-      setPayments(await getPayments(token))
+      let payload
+      try {
+        payload = getTokenPayload(state.user.token)
+      } catch (e) {
+        setState(actions.setUserToken(null))
+        window.localStorage.removeItem('token')
+        await router.push('/auth')
+        setState(actions.setIsLoading(false))
+        return
+      }
+      const socket = io(process.env.NEXT_PUBLIC_IO_URL)
+      setState(
+        actions.setUser({
+          id: payload.id,
+          username: payload.username,
+          role: payload.role,
+          token: state.user.token,
+          socket
+        })
+      )
+      socket.on('message', message => {
+        if (message === 'update page') router.reload()
+      })
+      const payments = await getAllPayments(state.user.token)
+      const ptypes = await getActivePtypes(state.user.token)
+      setState(actions.setPayments(payments))
+      setState(actions.setPtypes(ptypes))
+      setState(actions.setIsLoading(false))
     })()
-  }, [token])
+  }, [state.user.token])
 
   return (
     <AppContext.Provider
       value={{
-        user,
-        setUser,
-        token,
-        setToken,
-        payments,
-        setPayments,
-        months,
-        setMonths,
-        years,
-        setYears,
-        selectedMonth,
-        setSelectedMonth,
-        selectedYear,
-        setSelectedYear,
-        summarySorting,
-        setSummarySorting,
-        detailsSorting,
-        setDetailsSorting
+        state,
+        setState
       }}
     >
-      <Component {...pageProps} />
+      {state.isLoading ? <AppLoader /> : <Component {...pageProps} />}
     </AppContext.Provider>
   )
 }
