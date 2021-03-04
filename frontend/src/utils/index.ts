@@ -1,4 +1,5 @@
 import { verify } from 'jsonwebtoken'
+import * as allIcons from '@material-ui/icons'
 
 export const nF = () => {}
 
@@ -17,4 +18,9 @@ export const getTokenPayload = (token: string) => {
     role: 'admin' | 'user'
     username: string
   }
+}
+
+export const icons = Object.keys(allIcons).filter(icon => /Rounded/i.test(icon))
+export const getIcon = iconName => {
+  return allIcons[iconName].type.render
 }

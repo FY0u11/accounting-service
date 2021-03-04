@@ -6,7 +6,7 @@ const create = async (payment: PaymentDoc) => {
   return Payment.findById(newPayment._id, { user: 0 }).populate({
     path: 'ptype',
     match: { isActive: true },
-    select: 'name'
+    select: 'name icon'
   })
 }
 
@@ -19,7 +19,7 @@ const deleteOne = async (_id: string) => {
 const getAll = async (query: { all?: string }, user: Schema.Types.ObjectId) => {
   if ('all' in query) {
     const payments = await Payment.find({}, { __v: 0 })
-      .populate({ path: 'ptype', match: { isActive: true }, select: 'name' })
+      .populate({ path: 'ptype', match: { isActive: true }, select: 'name icon' })
       .populate('user', '-_id username')
     return payments.filter(payment => payment.ptype)
   }
@@ -27,7 +27,7 @@ const getAll = async (query: { all?: string }, user: Schema.Types.ObjectId) => {
   const payments = await Payment.find({ user }, { __v: 0, user: 0 }).populate({
     path: 'ptype',
     match: { isActive: true },
-    select: 'name'
+    select: 'name icon'
   })
   return payments.filter(payment => payment.ptype)
 }
@@ -41,7 +41,7 @@ const update = async (update: { value?: number; ptype?: Schema.Types.ObjectId },
   return Payment.findById(candidate._id, { user: 0 }).populate({
     path: 'ptype',
     match: { isActive: true },
-    select: 'name'
+    select: 'name icon'
   })
 }
 

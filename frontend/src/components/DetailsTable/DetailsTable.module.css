@@ -26,6 +26,7 @@
 
 .icon {
   margin-right: 1rem;
+  display: flex;
 }
 
 .desktop {

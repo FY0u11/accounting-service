@@ -8,13 +8,15 @@ export interface PtypeDoc extends mongoose.Document {
   isActive: boolean
   payments: Array<Schema.Types.ObjectId>
   sort: number
+  icon: string
 }
 
 const schema = new Schema<PtypeDoc>({
   name: { type: String, required: true, trim: true },
   isActive: { type: Boolean, default: true },
   payments: [{ type: Schema.Types.ObjectId, ref: 'payment' }],
-  sort: { type: Number }
+  sort: { type: Number },
+  icon: { type: String, default: 'MonetizationOnRounded' }
 })
 
 schema.pre('deleteOne', { document: true }, async function () {

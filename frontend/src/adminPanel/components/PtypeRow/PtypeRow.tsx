@@ -5,16 +5,19 @@ import { Types } from '../../../types'
 import { updatePtype } from 'api'
 import { AppContext } from '../../../context/AppContext'
 import classNames from 'classnames'
+import { getIcon } from 'utils'
 
 const PtypeRow = ({
   ptype,
   deletePtypeHandler,
   editPaymentHandler,
+  selectIconHandler,
   setIsLoading
 }: {
   setIsLoading: Types.SetState<boolean>
   ptype: Types.Ptype
   deletePtypeHandler: (type: string) => void
+  selectIconHandler: () => void
   editPaymentHandler
 }) => {
   const { state } = useContext(AppContext)
@@ -35,6 +38,9 @@ const PtypeRow = ({
       </td>
       <td>{ptype.name}</td>
       <td>{ptype.payments.length}</td>
+      <td className={styles.icon} onClick={selectIconHandler}>
+        {getIcon(ptype.icon)()}
+      </td>
       <td>
         <div className={styles.center}>
           {ptype.isActive ? <Visibility onClick={activeTypeHandler} /> : <VisibilityOff onClick={activeTypeHandler} />}

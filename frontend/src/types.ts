@@ -9,12 +9,14 @@ export namespace Types {
     isActive?: boolean
     payments: [string]
     sort: number
+    icon: string
   }
   export type PtypeToUpdate = {
     _id?: string
     name?: string
     isActive?: boolean
     sort?: number
+    icon?: string
   }
   export type PtypeToCreate = {
     name: string

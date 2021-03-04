@@ -20,10 +20,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, isActive, sort } = req.body
+  const { name, isActive, sort, icon } = req.body
   const id = (req.params.id as any) as Schema.Types.ObjectId
   try {
-    res.json(await ptypesService.update({ name, isActive, sort }, id))
+    res.json(await ptypesService.update({ name, isActive, sort, icon }, id))
   } catch (e) {
     await next(e)
   }

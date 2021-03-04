@@ -5,6 +5,7 @@ import { Edit, Close } from '@material-ui/icons'
 import { YesCancelModal, SortingHeader, ModalWindow, EditPaymentForm, Table } from 'components'
 import React from 'react'
 import moment from 'moment'
+import { getIcon } from 'utils'
 
 type DetailsTableProps = {
   payments: Types.Payment[]
@@ -81,6 +82,7 @@ const DetailsTable = ({
                   <td className={payment.value < 0 ? 'outcome' : null}>{payment.value ? payment.value : '-'}</td>
                   <td>
                     <div className={styles.type}>
+                      <div className={styles.icon}>{getIcon(payment.ptype.icon)()}</div>
                       <div className={styles.desktop}>{payment.ptype.name}</div>
                     </div>
                   </td>

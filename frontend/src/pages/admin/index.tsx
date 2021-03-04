@@ -7,6 +7,7 @@ import Sortable from 'sortablejs'
 import { createPtype, getAllPtypes, updatePtype, deleteOnePtype } from 'api'
 import { Types } from '../../types'
 import EditPtypeForm from '../../adminPanel/components/EditPtypeForm/EditPtypeForm'
+import IconSelectingForm from '../../adminPanel/components/IconSelectingForm/IconSelectingForm'
 
 const Admin = () => {
   const { lang } = useLanguage()
@@ -20,6 +21,7 @@ const Admin = () => {
   const [ptype, setPtype] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [sortable, setSortable] = useState(null)
+  const [isIconModalOpened, setIsIconModalOpened] = useState(false)
 
   const addPtypeHandler = async () => {
     try {
@@ -35,7 +37,7 @@ const Admin = () => {
   }
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const ptypes = await getAllPtypes(state.user.token)
       setPtypes(ptypes)
     })()
@@ -113,6 +115,24 @@ const Admin = () => {
     state.user.socket.emit('action', { token: state.user.token, action: 'update page' })
   }
 
+  const selectIconHandler = (ptype: Types.Ptype) => {
+    setEditedPtype(ptype)
+    setIsIconModalOpened(true)
+  }
+
+  const confirmIcon = async (icon: string) => {
+    try {
+      setIsLoading(true)
+      await updatePtype(editedPtype._id, { icon }, state.user.token)
+      setIsIconModalOpened(false)
+      editedPtype.icon = icon
+      setPtypes(ptypes)
+      setIsLoading(false)
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
+
   return (
     <Layout title={lang.ADMINING}>
       {!isLoading ? (
@@ -125,15 +145,22 @@ const Admin = () => {
             noClickHandler={() => setIsDeleteModalOpened(false)}
           />
           {editedPtype ? (
-            <EditPtypeForm
-              isEditModalOpened={isEditModalOpened}
-              setIsEditModalOpened={setIsEditModalOpened}
-              editedPtype={editedPtype}
-              setEditedPtype={setEditedPtype}
-              confirmEdit={confirmEdit}
-            />
+            <>
+              <EditPtypeForm
+                isEditModalOpened={isEditModalOpened}
+                setIsEditModalOpened={setIsEditModalOpened}
+                editedPtype={editedPtype}
+                setEditedPtype={setEditedPtype}
+                confirmEdit={confirmEdit}
+              />
+              <IconSelectingForm
+                isModalOpened={isIconModalOpened}
+                setIsModalOpened={setIsIconModalOpened}
+                confirmIcon={confirmIcon}
+              />
+            </>
           ) : null}
-
+          <div id="selectIconContainer" />
           <h4>Типы платежей</h4>
           <Table
             tbodyId={styles.tbody}
@@ -142,6 +169,7 @@ const Admin = () => {
                 <th />
                 <th>Название</th>
                 <th>Количество платежей</th>
+                <th>Иконка</th>
                 <th />
               </tr>
             }
@@ -154,6 +182,7 @@ const Admin = () => {
                     key={ptype._id}
                     deletePtypeHandler={() => deletePtypeHandler(ptype)}
                     editPaymentHandler={() => updatePtypeHandler(ptype)}
+                    selectIconHandler={() => selectIconHandler(ptype)}
                   />
                 ))}
               </>
