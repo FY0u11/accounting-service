@@ -1,7 +1,10 @@
 .container {
-    width: 800px;
+    width: 60vw;
     display: flex;
+    max-height: 400px;
+    overflow: scroll;
     flex-wrap: wrap;
+    overflow-x: hidden;
 }
 
 .icon {
