@@ -55,3 +55,19 @@ export const createPtype = async (ptype: Types.PtypeToCreate, token: string) => 
 export const deleteOnePtype = async (id: string, token: string) => {
   return await serverQuery(`/ptypes/${id}`, 'DELETE', token)
 }
+
+export const getAllUsers = async (token: string) => {
+  return await serverQuery('/users', 'GET', token)
+}
+
+export const deleteOneUser = async (id: string, token: string) => {
+  return await serverQuery(`/users/${id}`, 'DELETE', token)
+}
+
+export const createUser = async (user: Types.UserToCreate, token: string) => {
+  return await serverQuery(`/users`, 'POST', token, user)
+}
+
+export const updateUser = async (id: string, user: Types.UserToUpdate, token: string) => {
+  return await serverQuery(`/users/${id}`, 'PUT', token, user)
+}

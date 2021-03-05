@@ -46,10 +46,20 @@ export namespace Types {
     [key: string]: unknown
   }
   export type User = {
-    id: string
+    _id: string
     role: 'admin' | 'user'
     username: string
     socket: Socket
     token: string
+  }
+  export type UserToCreate = {
+    username: string
+    password: string
+  }
+  export type UserToUpdate = {
+    _id?: string
+    username?: string
+    password?: string
+    role?: 'admin' | 'user'
   }
 }

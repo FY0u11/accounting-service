@@ -31,12 +31,16 @@ const EditPtypeForm = ({
       title="Изменить наименование платежей"
     >
       <form className={styles.edit}>
-        <TextInput
-          type="text"
-          value={editedPtype.name}
-          onChangeHandler={name => setEditedPtype({ ...editedPtype, name })}
-          id="updatePtypeNameForm"
-        />
+        <div>
+          <label htmlFor="updatePtypeNameForm">Введите новое название платежей:</label>
+          <TextInput
+            type="text"
+            value={editedPtype.name}
+            onChangeHandler={name => setEditedPtype({ ...editedPtype, name })}
+            id="updatePtypeNameForm"
+            placeholder="Название платежей"
+          />
+        </div>
         <div style={{ marginTop: '1rem' }}>
           <Button onClick={confirmEdit} disabled={!editedPtype.name.trim()}>
             Изменить

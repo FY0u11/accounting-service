@@ -10,3 +10,10 @@
     background-color: #c6c6c6;
     opacity: .5;
 }
+
+.edit {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

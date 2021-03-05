@@ -1,0 +1,21 @@
+.disabled {
+    opacity: .5;
+}
+
+.center {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.drag_icon {
+    display: flex;
+    cursor: pointer;
+}
+
+.icon {
+    display: flex;
+    cursor: pointer;
+}

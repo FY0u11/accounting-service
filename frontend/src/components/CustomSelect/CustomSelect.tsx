@@ -6,33 +6,34 @@ type CustomSelectProps = {
   values?: string[]
   selectedValue?: string
   title?: string
+  label?: string
 }
 
 const CustomSelect = ({
   onChangeHandler = nF,
   values = [],
   selectedValue = '',
-  title = 'default'
+  title = 'default',
+  label
 }: CustomSelectProps) => {
   useEffect(() => {
     M.FormSelect.init(document.querySelectorAll('select'))
   }, [values, values])
 
   return (
-    <>
-      <div className="input-field">
-        <select onChange={e => onChangeHandler(e.target.value)}>
-          <option value="" disabled>
-            {title}
+    <div className="input-field">
+      <select onChange={e => onChangeHandler(e.target.value)} id={values.join()}>
+        <option value="" disabled>
+          {title}
+        </option>
+        {values.map(value => (
+          <option value={value} key={value} selected={selectedValue === value}>
+            {value}
           </option>
-          {values.map(value => (
-            <option value={value} key={value} selected={selectedValue === value}>
-              {value}
-            </option>
-          ))}
-        </select>
-      </div>
-    </>
+        ))}
+      </select>
+      <label>{label}</label>
+    </div>
   )
 }
 

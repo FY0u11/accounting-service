@@ -4,10 +4,21 @@ import { useLanguage } from 'hooks'
 import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import Sortable from 'sortablejs'
-import { createPtype, getAllPtypes, updatePtype, deleteOnePtype } from 'api'
+import {
+  createPtype,
+  getAllPtypes,
+  updatePtype,
+  deleteOnePtype,
+  getAllUsers,
+  deleteOneUser,
+  createUser,
+  updateUser
+} from 'api'
 import { Types } from '../../types'
 import EditPtypeForm from '../../adminPanel/components/EditPtypeForm/EditPtypeForm'
 import IconSelectingForm from '../../adminPanel/components/IconSelectingForm/IconSelectingForm'
+import UserRow from '../../adminPanel/components/UserRow/UserRow'
+import EditUserForm from '../../adminPanel/components/EditUserForm/EditUserForm'
 
 const Admin = () => {
   const { lang } = useLanguage()
@@ -22,6 +33,12 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [sortable, setSortable] = useState(null)
   const [isIconModalOpened, setIsIconModalOpened] = useState(false)
+  const [users, setUsers] = useState([])
+  const [isUserDeleteModalOpened, setIsUserDeleteModalOpened] = useState(false)
+  const [userDelCandidate, setUserDelCandidate] = useState('')
+  const [userForm, setUserForm] = useState<Types.UserToCreate>({} as Types.UserToCreate)
+  const [isUserEditModalOpened, setIsUserEditModalOpened] = useState(false)
+  const [editedUser, setEditedUser] = useState<Types.UserToUpdate>({} as Types.UserToUpdate)
 
   const addPtypeHandler = async () => {
     try {
@@ -39,7 +56,9 @@ const Admin = () => {
   useEffect(() => {
     ;(async () => {
       const ptypes = await getAllPtypes(state.user.token)
+      const users = await getAllUsers(state.user.token)
       setPtypes(ptypes)
+      setUsers(users)
     })()
   }, [])
 
@@ -133,6 +152,52 @@ const Admin = () => {
     }
   }
 
+  const deleteUserHandler = (userId: string) => {
+    setUserDelCandidate(userId)
+    setIsUserDeleteModalOpened(true)
+  }
+
+  const deleteUser = async () => {
+    try {
+      setIsLoading(true)
+      await deleteOneUser(userDelCandidate, state.user.token)
+      setUsers(users.filter(user => user._id !== userDelCandidate))
+      setIsUserDeleteModalOpened(false)
+      setIsLoading(false)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const addUserHandler = async () => {
+    try {
+      setIsLoading(true)
+      const user = await createUser(userForm, state.user.token)
+      setUsers([...users, user])
+      setUserForm({} as Types.UserToCreate)
+      setIsLoading(false)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const updateUserHandler = (user: Types.UserToUpdate) => {
+    setIsUserEditModalOpened(true)
+    setEditedUser(user)
+  }
+
+  const confirmUserEdit = async () => {
+    try {
+      setIsLoading(true)
+      await updateUser(editedUser._id, editedUser, state.user.token)
+      setUsers([...users.filter(user => user._id !== editedUser._id), editedUser])
+      setIsUserEditModalOpened(false)
+      setIsLoading(false)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <Layout title={lang.ADMINING}>
       {!isLoading ? (
@@ -200,6 +265,67 @@ const Admin = () => {
               />
             </div>
             <Button onClick={addPtypeHandler} disabled={!ptype.trim()}>
+              Добавить
+            </Button>
+          </form>
+          <br />
+          <YesCancelModal
+            yesClickHandler={deleteUser}
+            noClickHandler={() => setIsUserDeleteModalOpened(false)}
+            title="Вы уверены, что хотите удалить данного пользователя?"
+            setIsModalOpened={setIsUserDeleteModalOpened}
+            isModalOpened={isUserDeleteModalOpened}
+          />
+          <EditUserForm
+            isEditModalOpened={isUserEditModalOpened}
+            setIsEditModalOpened={setIsUserEditModalOpened}
+            editedUser={editedUser}
+            setEditedUser={setEditedUser}
+            confirmEdit={confirmUserEdit}
+          />
+          <h4>Пользователи</h4>
+          <Table
+            thead={
+              <tr>
+                <th>Имя пользователя</th>
+                <th>Роль</th>
+                <th />
+              </tr>
+            }
+            tbody={
+              <>
+                {users.map(user => (
+                  <UserRow
+                    user={user}
+                    deleteUserHandler={deleteUserHandler}
+                    editUserHandler={() => updateUserHandler(user)}
+                    key={user._id}
+                  />
+                ))}
+              </>
+            }
+          />
+          <br />
+          <form className={styles.add_new_ptype_form}>
+            <div>
+              <label htmlFor="username">Добавить нового пользователя:</label>
+              <TextInput
+                placeholder="Введите имя пользователя"
+                id="username"
+                onChangeHandler={username => setUserForm({ ...userForm, username })}
+                value={userForm.username}
+              />
+            </div>
+            <div>
+              <label htmlFor="password">&nbsp;</label>
+              <TextInput
+                placeholder="Введите пароль"
+                id="password"
+                onChangeHandler={password => setUserForm({ ...userForm, password })}
+                value={userForm.password}
+              />
+            </div>
+            <Button onClick={addUserHandler} disabled={!userForm.password?.trim() || !userForm.username?.trim()}>
               Добавить
             </Button>
           </form>
