@@ -11,6 +11,7 @@ router.route('/payments/:id').put(paymentsController.update).delete(paymentsCont
 router.route('/ptypes').get(ptypesController.getAll).post(ptypesController.create)
 router.route('/ptypes/:id').put(ptypesController.update).delete(ptypesController.deleteOne)
 router.route('/users').get(usersController.getAll).post(usersController.create)
+router.route('/users/self').get(usersController.getSelf)
 router.route('/users/:id').put(usersController.update).delete(usersController.deleteOne)
 router.route('/auth').post(authController)
 

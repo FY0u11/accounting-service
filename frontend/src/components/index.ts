@@ -13,6 +13,7 @@ import EditPaymentForm from './EditPaymentForm/EditPaymentForm'
 import PtypeRow from '../adminPanel/components/PtypeRow/PtypeRow'
 import Table from './Table/Table'
 import AppLoader from './AppLoader/AppLoader'
+import Switch from './Switch/Switch'
 
 export {
   Button,
@@ -29,5 +30,6 @@ export {
   EditPaymentForm,
   PtypeRow,
   Table,
-  AppLoader
+  AppLoader,
+  Switch
 }

@@ -1,7 +1,7 @@
 import styles from './ModalWindow.module.css'
 import { Close } from '@material-ui/icons'
 import { Types } from '../../types'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { nF } from 'utils'
 
 type ModalWindowProps = {
@@ -17,6 +17,15 @@ const ModalWindow = ({
   title = 'default title',
   children = null
 }: ModalWindowProps) => {
+  useEffect(() => {
+    if (!isModalOpened) return
+    console.log('opened')
+    document.getElementById('modal_window').addEventListener('keydown', e => {
+      console.log('key pressed')
+      if (e.key === 'Escape') setIsModalOpened(false)
+    })
+  }, [isModalOpened])
+
   return (
     <>
       {isModalOpened ? (
@@ -26,6 +35,7 @@ const ModalWindow = ({
             const el = document.getElementsByClassName(styles.container)[0]
             if (el === e.target) setIsModalOpened(false)
           }}
+          id="modal_window"
         >
           <div className={styles.inner_container}>
             <div className={styles.header}>

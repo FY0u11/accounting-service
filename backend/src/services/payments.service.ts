@@ -3,11 +3,13 @@ import { Schema } from 'mongoose'
 
 const create = async (payment: PaymentDoc) => {
   const newPayment = await new Payment(payment).save()
-  return Payment.findById(newPayment._id, { user: 0 }).populate({
-    path: 'ptype',
-    match: { isActive: true },
-    select: 'name icon'
-  })
+  return Payment.findById(newPayment._id)
+    .populate({
+      path: 'ptype',
+      match: { isActive: true },
+      select: 'name icon'
+    })
+    .populate('user', '-_id username')
 }
 
 const deleteOne = async (_id: string) => {

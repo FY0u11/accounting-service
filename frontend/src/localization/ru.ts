@@ -49,6 +49,14 @@ export default {
   ADMINING: 'Администрирование',
   BACK_TO_HOME: 'На главную',
   NEED_RELOAD: 'Администратор сайта внёс изменения в работу сайта, страница будет перезагружена.',
+  USER: 'Пользователь',
+  MONDAY: 'пн.',
+  TUESDAY: 'вт.',
+  WEDNESDAY: 'ср.',
+  THURSDAY: 'чт.',
+  FRIDAY: 'пт.',
+  SATURDAY: 'сб.',
+  SUNDAY: 'вск.',
   // Backend messages
   'Invalid login or password': 'Неверный логин или пароль'
 }

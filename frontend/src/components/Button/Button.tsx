@@ -6,9 +6,10 @@ type ButtonProps = {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void
   children?: React.ReactNode
   disabled?: boolean
+  [key: string]: unknown
 }
 
-const Button = ({ onClick = nF, children = 'button', disabled = false }: ButtonProps) => {
+const Button = ({ onClick = nF, children = 'button', disabled = false, ...props }: ButtonProps) => {
   return (
     <button
       className={classNames({
@@ -20,6 +21,7 @@ const Button = ({ onClick = nF, children = 'button', disabled = false }: ButtonP
         e.preventDefault()
         onClick(e)
       }}
+      {...props}
     >
       <span>{children}</span>
     </button>

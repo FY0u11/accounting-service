@@ -10,7 +10,7 @@ import { initialState, reducer } from '../store/reducers'
 import { actions } from '../store/actions'
 import { getTokenPayload } from 'utils'
 import { AppLoader } from 'components'
-import { getActivePtypes, getAllPayments } from 'api'
+import { getActivePtypes, getAllPayments, getSelf, getSelfPayments, updateUser } from 'api'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -37,8 +37,10 @@ const App = ({ Component, pageProps }: AppProps) => {
     setState(actions.setIsLoading(true))
     ;(async () => {
       let payload
+      let user
       try {
         payload = getTokenPayload(state.user.token)
+        user = await getSelf(state.user.token)
       } catch (e) {
         setState(actions.setUserToken(null))
         window.localStorage.removeItem('token')
@@ -49,23 +51,38 @@ const App = ({ Component, pageProps }: AppProps) => {
       const socket = io(process.env.NEXT_PUBLIC_IO_URL)
       setState(
         actions.setUser({
-          id: payload.id,
-          username: payload.username,
-          role: payload.role,
+          _id: payload.id,
+          username: user.username,
+          role: user.role,
           token: state.user.token,
-          socket
+          socket,
+          settings: JSON.parse(user.settings)
         })
       )
       socket.on('message', message => {
         if (message === 'update page') router.reload()
       })
-      const payments = await getAllPayments(state.user.token)
+      const payments =
+        user.role === 'admin' && user.settings.showAllPayments
+          ? await getAllPayments(state.user.token)
+          : await getSelfPayments(state.user.token)
       const ptypes = await getActivePtypes(state.user.token)
       setState(actions.setPayments(payments))
       setState(actions.setPtypes(ptypes))
       setState(actions.setIsLoading(false))
     })()
   }, [state.user.token])
+
+  useEffect(() => {
+    (async () => {
+      await updateUser(state.user._id, { settings: JSON.stringify(state.user.settings) }, state.user.token)
+      const payments =
+        state.user.role === 'admin' && state.user.settings.showAllPayments
+          ? await getAllPayments(state.user.token)
+          : await getSelfPayments(state.user.token)
+      setState(actions.setPayments(payments))
+    })()
+  }, [state.user.settings.showAllPayments])
 
   return (
     <AppContext.Provider

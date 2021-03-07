@@ -15,9 +15,7 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
   const { lang } = useLanguage()
   const { state } = useContext(AppContext)
   const totalValue = payments.reduce((acc, payment) => (acc += +payment.total), 0)
-
-  // const paymentTypes = state.ptypes.map(ptype => ptype.name)
-
+  const holidayPattern = new RegExp(`(${lang.SATURDAY.replace('.', '')}|${lang.SUNDAY.replace('.', '')})`, 'i')
   return (
     <div className={styles.container}>
       <Table
@@ -54,7 +52,7 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
                         : ''
                     }
                   >
-                    <td>{payment.day}</td>
+                    <td className={holidayPattern.test(payment.day) ? styles.text_shaded : null}>{payment.day}</td>
                     {state.ptypes.map((ptype, i) => (
                       <td key={i + 'td'} className={payment[ptype.name] < 0 ? 'outcome' : null}>
                         {payment[ptype.name] ? payment[ptype.name].toLocaleString() : '-'}

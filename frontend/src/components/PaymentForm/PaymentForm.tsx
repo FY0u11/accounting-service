@@ -3,6 +3,7 @@ import { useAddPaymentHandler, useLanguage } from 'hooks'
 import styles from './PaymentForm.module.css'
 import { Button, RadioInput, TextInput } from 'components'
 import { AppContext } from '../../context/AppContext'
+import { verifyPayment } from 'utils'
 
 const PaymentForm = () => {
   const { state } = useContext(AppContext)
@@ -21,7 +22,8 @@ const PaymentForm = () => {
 
   const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (isNaN(+value) || +value <= -10e7 || +value > 10e7 || value.length > 9) return
+    if (!verifyPayment(value)) return
+    if (!value) return
     setValue('')
     try {
       setIsLoading(true)
@@ -36,7 +38,15 @@ const PaymentForm = () => {
   return (
     <form className={styles.container}>
       <div>
-        <TextInput value={value} onChangeHandler={setValue} placeholder={lang.INPUT_PAYMENT} id="addPaymentForm" />
+        <TextInput
+          value={value}
+          onChangeHandler={v => {
+            if (!verifyPayment(v)) return
+            setValue(v)
+          }}
+          placeholder={lang.INPUT_PAYMENT}
+          id="addPaymentForm"
+        />
         {state.ptypes.map((ptype, i) => {
           return (
             <RadioInput
@@ -54,10 +64,7 @@ const PaymentForm = () => {
           )
         })}
       </div>
-      <Button
-        onClick={onClickHandler}
-        disabled={isLoading || isNaN(+value) || +value <= -10e7 || +value > 10e7 || value.length > 9}
-      >
+      <Button onClick={onClickHandler} disabled={!verifyPayment(value) || isLoading || !value}>
         {lang.ADD_PAYMENT}
       </Button>
     </form>

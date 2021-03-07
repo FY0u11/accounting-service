@@ -2,10 +2,14 @@ import { useContext, useEffect, useState } from 'react'
 import { SummaryTable } from 'components'
 import { Types } from '../../types'
 import { AppContext } from '../../context/AppContext'
+import { useLanguage } from 'hooks'
 
 const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
   const [selectedPayments, setSelectedPayments] = useState([] as Types.SummaryPayment[])
   const { state } = useContext(AppContext)
+  const { lang } = useLanguage()
+
+  const days = [lang.SUNDAY, lang.MONDAY, lang.TUESDAY, lang.WEDNESDAY, lang.THURSDAY, lang.FRIDAY, lang.SATURDAY]
 
   const sort = payments => {
     return [...payments].sort((p1, p2) =>
@@ -26,7 +30,7 @@ const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
         day.total += payment.value
       } else {
         daysMap.set(dt.getDate(), {
-          day: dt.getDate(),
+          day: `${dt.getDate()}, ${days[dt.getDay()]}`,
           [payment.ptype.name]: payment.value,
           total: payment.value
         })

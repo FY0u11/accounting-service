@@ -11,12 +11,20 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+const getSelf = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.json(await usersService.getSelf(req.user.id))
+  } catch (e) {
+    await next(e)
+  }
+}
+
 const update = async (req: Request, res: Response, next: NextFunction) => {
   if (req.user.role !== 'admin') return next({ status: 403, message: 'Forbidden' })
-  const { username, password, role } = req.body
+  const { username, password, role, settings } = req.body
   const id = (req.params.id as any) as Schema.Types.ObjectId
   try {
-    res.json(await usersService.update({ username, password, role }, id))
+    res.json(await usersService.update({ username, password, role, settings }, id))
   } catch (e) {
     await next(e)
   }
@@ -47,5 +55,6 @@ export const usersController = {
   getAll,
   update,
   deleteOne,
-  create
+  create,
+  getSelf
 }

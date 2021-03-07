@@ -24,8 +24,12 @@ export const createPayment = async (payment: Types.PaymentForCreate, token: stri
   return await serverQuery(`/payments`, 'POST', token, payment)
 }
 
-export const getAllPayments = async (token: string) => {
+export const getSelfPayments = async (token: string) => {
   return await serverQuery(`/payments`, 'GET', token)
+}
+
+export const getAllPayments = async (token: string) => {
+  return await serverQuery(`/payments?all`, 'GET', token)
 }
 
 export const getActivePtypes = async (token: string) => {
@@ -70,4 +74,8 @@ export const createUser = async (user: Types.UserToCreate, token: string) => {
 
 export const updateUser = async (id: string, user: Types.UserToUpdate, token: string) => {
   return await serverQuery(`/users/${id}`, 'PUT', token, user)
+}
+
+export const getSelf = async (token: string) => {
+  return await serverQuery('/users/self', 'GET', token)
 }

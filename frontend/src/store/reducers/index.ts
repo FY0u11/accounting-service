@@ -3,11 +3,12 @@ import { Types } from '../../types'
 
 export const initialState = {
   user: {
-    id: '',
+    _id: '',
     socket: null,
     username: '',
     role: 'user',
-    token: ''
+    token: '',
+    settings: {}
   } as Types.User,
   payments: [] as Types.Payment[],
   ptypes: [] as Types.Ptype[],
@@ -51,6 +52,11 @@ export const reducer = (state = initialState, action: ActionsTypes<typeof action
       return { ...state, isLoading: action.isLoading }
     case 'SET_PTYPES':
       return { ...state, ptypes: action.ptypes }
+    case 'SET_USER_SETTINGS':
+      return {
+        ...state,
+        user: { ...state.user, settings: { ...state.user.settings, ...action.settings } }
+      }
     default:
       return state
   }

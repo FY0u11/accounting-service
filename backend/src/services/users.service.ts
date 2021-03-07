@@ -16,8 +16,12 @@ const getAll = async () => {
   return User.find()
 }
 
+const getSelf = async (_id: string) => {
+  return User.findById(_id)
+}
+
 const update = async (
-  update: { username?: string; role?: 'user' | 'admin'; password: string },
+  update: { username?: string; role?: 'user' | 'admin'; password: string; settings: string },
   _id: Schema.Types.ObjectId
 ) => {
   const candidate = await User.findById(_id)
@@ -25,6 +29,7 @@ const update = async (
   candidate.username = update.username ?? candidate.username
   candidate.role = update.role ?? candidate.role
   candidate.password = update.password ?? candidate.password
+  candidate.settings = update.settings ?? candidate.settings
   await candidate.save()
   return candidate
 }
@@ -33,5 +38,6 @@ export const usersService = {
   create,
   deleteOne,
   getAll,
+  getSelf,
   update
 }

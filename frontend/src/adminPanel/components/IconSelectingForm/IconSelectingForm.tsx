@@ -15,21 +15,37 @@ const IconSelectingForm = ({ isModalOpened, setIsModalOpened, confirmIcon }: Ico
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    const regex = new RegExp(`${filter}`, 'i')
-    setSelectedIcons([...icons].filter(icon => regex.test(icon)))
+    if (!isModalOpened) return
+    const input = document.getElementById('iconSearchInput')
+    input.focus()
+  }, [isModalOpened])
+
+  useEffect(() => {
+    const regex = new RegExp(filter, 'i')
+    setSelectedIcons([...icons].filter(icon => icon.match(regex)))
   }, [filter])
 
   return (
     <ModalWindow isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} title="Выбор иконки">
-      <TextInput value={filter} onChangeHandler={setFilter} placeholder="Введите ключевое слово для поиска" />
-      <div className={styles.container}>
-        {selectedIcons.map(icon => {
-          return (
-            <div key={icon} onClick={() => confirmIcon(icon)} className={styles.icon}>
-              {getIcon(icon)()}
-            </div>
-          )
-        })}
+      <div id={styles.wrapper}>
+        <TextInput
+          value={filter}
+          onChangeHandler={v => {
+            if (!/^\w{0,30}$/.test(v)) return
+            setFilter(v)
+          }}
+          placeholder="Введите ключевое слово для поиска"
+          id="iconSearchInput"
+        />
+        <div className={styles.container}>
+          {selectedIcons.map(icon => {
+            return (
+              <div key={icon} onClick={() => confirmIcon(icon)} className={styles.icon}>
+                {getIcon(icon)()}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </ModalWindow>
   )

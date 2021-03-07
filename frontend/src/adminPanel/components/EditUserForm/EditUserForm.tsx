@@ -2,6 +2,7 @@ import styles from '../../../pages/admin/Admin.module.css'
 import { Button, CustomSelect, ModalWindow, TextInput } from 'components'
 import { Types } from '../../../types'
 import { useEffect } from 'react'
+import { verifyPassword, verifyUsername } from 'utils'
 
 type EditUserFormProps = {
   isEditModalOpened: boolean
@@ -36,7 +37,10 @@ const EditUserForm = ({
           <TextInput
             type="text"
             value={editedUser.username}
-            onChangeHandler={username => setEditedUser({ ...editedUser, username })}
+            onChangeHandler={username => {
+              if (!verifyUsername(username)) return
+              setEditedUser({ ...editedUser, username })
+            }}
             id="usernameInput"
             placeholder="Имя пользователя"
           />
@@ -46,7 +50,10 @@ const EditUserForm = ({
           <TextInput
             type="password"
             value={editedUser.password}
-            onChangeHandler={password => setEditedUser({ ...editedUser, password })}
+            onChangeHandler={password => {
+              if (!verifyPassword(password)) return
+              setEditedUser({ ...editedUser, password })
+            }}
             id="passwordInput"
             placeholder="Пароль"
           />

@@ -41,7 +41,7 @@ export namespace Types {
     as: number
   }
   export type SummaryPayment = {
-    day: number
+    day: string
     total: number
     [key: string]: unknown
   }
@@ -51,6 +51,7 @@ export namespace Types {
     username: string
     socket: Socket
     token: string
+    settings: UserSettings
   }
   export type UserToCreate = {
     username: string
@@ -61,5 +62,9 @@ export namespace Types {
     username?: string
     password?: string
     role?: 'admin' | 'user'
+    settings?: string
+  }
+  export type UserSettings = {
+    showAllPayments?: boolean
   }
 }

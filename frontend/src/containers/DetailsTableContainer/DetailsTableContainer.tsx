@@ -14,12 +14,15 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
 
   const sort = payments => {
     return [...payments].sort((p1, p2) => {
-      if (state.app.detailsSorting.by !== 'ptype') {
-        return p1[state.app.detailsSorting.by] < p2[state.app.detailsSorting.by]
-          ? state.app.detailsSorting.as
-          : -state.app.detailsSorting.as
-      } else {
-        return p1.ptype.name < p2.ptype.name ? state.app.detailsSorting.as : -state.app.detailsSorting.as
+      switch (state.app.detailsSorting.by) {
+        case 'ptype':
+          return p1.ptype.name < p2.ptype.name ? state.app.detailsSorting.as : -state.app.detailsSorting.as
+        case 'username':
+          return p1.user.username < p2.user.username ? state.app.detailsSorting.as : -state.app.detailsSorting.as
+        default:
+          return p1[state.app.detailsSorting.by] < p2[state.app.detailsSorting.by]
+            ? state.app.detailsSorting.as
+            : -state.app.detailsSorting.as
       }
     })
   }

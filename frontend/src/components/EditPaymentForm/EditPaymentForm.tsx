@@ -4,6 +4,7 @@ import { Types } from '../../types'
 import styles from './EditPaymentForm.module.css'
 import { Button, RadioInput, TextInput } from 'components'
 import { AppContext } from '../../context/AppContext'
+import { verifyPayment } from 'utils'
 
 const EditPaymentForm = ({
   selectedPayment,
@@ -21,7 +22,7 @@ const EditPaymentForm = ({
 
   const editHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (isNaN(+value) || +value <= -10e7 || +value > 10e7 || value.length > 9) return
+    if (!verifyPayment(value)) return
     setValue('')
     setIsModalOpened(false)
     try {
@@ -40,7 +41,15 @@ const EditPaymentForm = ({
   return (
     <form className={styles.container}>
       <div>
-        <TextInput value={value} onChangeHandler={setValue} placeholder={lang.INPUT_PAYMENT} id="editPaymentForm" />
+        <TextInput
+          value={value}
+          onChangeHandler={v => {
+            if (!verifyPayment(v)) return
+            setValue(v)
+          }}
+          placeholder={lang.INPUT_PAYMENT}
+          id="editPaymentForm"
+        />
         {state.ptypes.map(ptype => (
           <RadioInput
             group="Payment types"
@@ -56,7 +65,7 @@ const EditPaymentForm = ({
           </RadioInput>
         ))}
       </div>
-      <Button onClick={editHandler} disabled={isNaN(+value) || +value <= -10e7 || +value > 10e7 || value.length > 9}>
+      <Button onClick={editHandler} disabled={!verifyPayment(value) || !value}>
         {lang.READY}
       </Button>
     </form>

@@ -22,12 +22,12 @@ const CustomSelect = ({
 
   return (
     <div className="input-field">
-      <select onChange={e => onChangeHandler(e.target.value)} id={values.join()}>
+      <select onChange={e => onChangeHandler(e.target.value)} id={values.join()} value={selectedValue}>
         <option value="" disabled>
           {title}
         </option>
         {values.map(value => (
-          <option value={value} key={value} selected={selectedValue === value}>
+          <option value={value} key={value}>
             {value}
           </option>
         ))}

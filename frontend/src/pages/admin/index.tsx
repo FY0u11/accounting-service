@@ -19,6 +19,7 @@ import EditPtypeForm from '../../adminPanel/components/EditPtypeForm/EditPtypeFo
 import IconSelectingForm from '../../adminPanel/components/IconSelectingForm/IconSelectingForm'
 import UserRow from '../../adminPanel/components/UserRow/UserRow'
 import EditUserForm from '../../adminPanel/components/EditUserForm/EditUserForm'
+import { verifyPassword, verifyPtypeName, verifyUsername } from 'utils'
 
 const Admin = () => {
   const { lang } = useLanguage()
@@ -54,11 +55,13 @@ const Admin = () => {
   }
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
+      setIsLoading(true)
       const ptypes = await getAllPtypes(state.user.token)
       const users = await getAllUsers(state.user.token)
       setPtypes(ptypes)
       setUsers(users)
+      setIsLoading(false)
     })()
   }, [])
 
@@ -215,7 +218,10 @@ const Admin = () => {
                 isEditModalOpened={isEditModalOpened}
                 setIsEditModalOpened={setIsEditModalOpened}
                 editedPtype={editedPtype}
-                setEditedPtype={setEditedPtype}
+                setEditedPtype={v => {
+                  if (!verifyPtypeName(v.name)) return
+                  setEditedPtype(v)
+                }}
                 confirmEdit={confirmEdit}
               />
               <IconSelectingForm
@@ -260,11 +266,14 @@ const Admin = () => {
               <TextInput
                 placeholder="Введите название"
                 id="paymentTypeInput"
-                onChangeHandler={setPtype}
+                onChangeHandler={v => {
+                  if (!verifyPtypeName(v)) return
+                  setPtype(v)
+                }}
                 value={ptype}
               />
             </div>
-            <Button onClick={addPtypeHandler} disabled={!ptype.trim()}>
+            <Button onClick={addPtypeHandler} disabled={!ptype}>
               Добавить
             </Button>
           </form>
@@ -312,7 +321,10 @@ const Admin = () => {
               <TextInput
                 placeholder="Введите имя пользователя"
                 id="username"
-                onChangeHandler={username => setUserForm({ ...userForm, username })}
+                onChangeHandler={username => {
+                  if (!verifyUsername(username)) return
+                  setUserForm({ ...userForm, username })
+                }}
                 value={userForm.username}
               />
             </div>
@@ -321,7 +333,10 @@ const Admin = () => {
               <TextInput
                 placeholder="Введите пароль"
                 id="password"
-                onChangeHandler={password => setUserForm({ ...userForm, password })}
+                onChangeHandler={password => {
+                  if (!verifyPassword(password)) return
+                  setUserForm({ ...userForm, password })
+                }}
                 value={userForm.password}
               />
             </div>

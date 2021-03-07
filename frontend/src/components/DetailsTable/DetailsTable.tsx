@@ -3,9 +3,10 @@ import { useLanguage } from 'hooks'
 import { Types } from '../../types'
 import { Edit, Close } from '@material-ui/icons'
 import { YesCancelModal, SortingHeader, ModalWindow, EditPaymentForm, Table } from 'components'
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from 'moment'
 import { getIcon } from 'utils'
+import { AppContext } from '../../context/AppContext'
 
 type DetailsTableProps = {
   payments: Types.Payment[]
@@ -35,6 +36,7 @@ const DetailsTable = ({
     ptype: lang.TYPE
   }
   const totalValue = payments.reduce((acc, payment) => (acc += payment.value), 0)
+  const { state } = useContext(AppContext)
 
   return (
     <div className={styles.container}>
@@ -64,6 +66,13 @@ const DetailsTable = ({
                 </SortingHeader>
               </th>
             ))}
+            {state.user.settings.showAllPayments ? (
+              <th>
+                <SortingHeader by="username" type="details">
+                  {lang.USER}
+                </SortingHeader>
+              </th>
+            ) : null}
             <th>
               <SortingHeader>{lang.ACTIONS}</SortingHeader>
             </th>
@@ -79,13 +88,16 @@ const DetailsTable = ({
                     <div className={styles.desktop}>{moment(payment.time).format('DD.MM.YYYY, HH:mm:ss')}</div>
                     <div className={styles.mobile}>{moment(payment.time).format('HH:mm')}</div>
                   </td>
-                  <td className={payment.value < 0 ? 'outcome' : null}>{payment.value ? payment.value : '-'}</td>
+                  <td className={payment.value < 0 ? 'outcome' : null}>
+                    {payment.value ? payment.value.toLocaleString() : '-'}
+                  </td>
                   <td>
                     <div className={styles.type}>
                       <div className={styles.icon}>{getIcon(payment.ptype.icon)()}</div>
                       <div className={styles.desktop}>{payment.ptype.name}</div>
                     </div>
                   </td>
+                  {state.user.settings.showAllPayments ? <td>{payment.user?.username || '-'}</td> : null}
                   <td>
                     <div className={styles.actions}>
                       <Edit
