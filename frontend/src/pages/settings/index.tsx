@@ -5,6 +5,7 @@ import React, { useContext } from 'react'
 import { AppContext } from '../../context/AppContext'
 import styles from './Settings.module.css'
 import { actions } from '../../store/actions'
+import { updateUser } from 'api'
 
 const Settings = () => {
   const { lang } = useLanguage()
@@ -23,9 +24,14 @@ const Settings = () => {
                 yes="Да"
                 no="Нет"
                 checked={state.user.settings.showAllPayments || false}
-                checkHandler={() =>
+                checkHandler={async () => {
+                  await updateUser(
+                    state.user._id,
+                    { settings: JSON.stringify({ showAllPayments: !state.user.settings.showAllPayments }) },
+                    state.user.token
+                  )
                   setState(actions.setUserSettings({ showAllPayments: !state.user.settings.showAllPayments }))
-                }
+                }}
               />
             </p>
             <p>

@@ -29,7 +29,7 @@ const update = async (
   if (!candidate) throw { status: 404, message: 'User not found' }
   candidate.username = update.username ?? candidate.username
   candidate.role = update.role ?? candidate.role
-  candidate.password = (await hash(update.password, 10)) ?? candidate.password
+  candidate.password = update.password ? await hash(update.password, 10) : candidate.password
   candidate.settings = update.settings ?? candidate.settings
   await candidate.save()
   return candidate

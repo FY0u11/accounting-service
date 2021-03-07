@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const [state, setState] = useReducer(reducer, initialState)
   const router = useRouter()
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (window) await import('../../node_modules/materialize-css/dist/js/materialize.min')
       const token = window.localStorage.getItem('token')
       if (!token) {
@@ -63,7 +63,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         if (message === 'update page') router.reload()
       })
       const payments =
-        user.role === 'admin' && user.settings.showAllPayments
+        user.role === 'admin' && JSON.parse(user.settings).showAllPayments
           ? await getAllPayments(state.user.token)
           : await getSelfPayments(state.user.token)
       const ptypes = await getActivePtypes(state.user.token)
@@ -74,8 +74,8 @@ const App = ({ Component, pageProps }: AppProps) => {
   }, [state.user.token])
 
   useEffect(() => {
-    (async () => {
-      await updateUser(state.user._id, { settings: JSON.stringify(state.user.settings) }, state.user.token)
+    ;(async () => {
+      if (!state.user.token) return
       const payments =
         state.user.role === 'admin' && state.user.settings.showAllPayments
           ? await getAllPayments(state.user.token)

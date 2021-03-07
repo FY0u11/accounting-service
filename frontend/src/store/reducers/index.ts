@@ -24,7 +24,6 @@ export const initialState = {
 }
 
 export const reducer = (state = initialState, action: ActionsTypes<typeof actions>): typeof initialState => {
-  console.log('ACTION', action)
   switch (action.type) {
     case 'SET_APP_MONTHS':
       return { ...state, app: { ...state.app, months: action.months } }
