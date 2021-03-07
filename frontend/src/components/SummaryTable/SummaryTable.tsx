@@ -41,7 +41,10 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
           <>
             {payments.map((payment, i) => {
               return (
-                <Link key={i} href={`/details/${state.app.chosenYear}/${state.app.chosenMonth}/${payment.day}`}>
+                <Link
+                  key={i}
+                  href={`/details/${state.app.chosenYear}/${state.app.chosenMonth}/${payment.day.replace(/\D+/, '')}`}
+                >
                   <tr
                     className={
                       moment().isSame(

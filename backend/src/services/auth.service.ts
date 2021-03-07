@@ -1,12 +1,13 @@
 import { User, UserDoc } from '../models/User'
 import { sign } from 'jsonwebtoken'
 import { config } from 'dotenv'
+import { compare } from 'bcrypt'
 config()
 
 export const authService = async (user: UserDoc) => {
   const candidate = await User.findOne({ username: user.username })
 
-  if (!candidate || candidate.password !== user.password)
+  if (!candidate || !(await compare(user.password, candidate.password)))
     throw {
       status: 400,
       success: false,
