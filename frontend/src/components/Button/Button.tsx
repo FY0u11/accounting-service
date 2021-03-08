@@ -1,6 +1,7 @@
 import React, { MouseEvent } from 'react'
 import classNames from 'classnames'
 import { nF } from 'utils'
+import styles from './Button.module.css'
 
 type ButtonProps = {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void
@@ -15,7 +16,8 @@ const Button = ({ onClick = nF, children = 'button', disabled = false, ...props 
       className={classNames({
         disabled: disabled,
         btn: true,
-        'grey darken-4': true
+        'grey darken-4': true,
+        [styles.container]: true
       })}
       onClick={e => {
         e.preventDefault()

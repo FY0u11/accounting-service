@@ -19,9 +19,7 @@ const ModalWindow = ({
 }: ModalWindowProps) => {
   useEffect(() => {
     if (!isModalOpened) return
-    console.log('opened')
     document.getElementById('modal_window').addEventListener('keydown', e => {
-      console.log('key pressed')
       if (e.key === 'Escape') setIsModalOpened(false)
     })
   }, [isModalOpened])

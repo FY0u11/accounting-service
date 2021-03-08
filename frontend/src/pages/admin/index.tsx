@@ -201,6 +201,20 @@ const Admin = () => {
     }
   }
 
+  const exportPayments = async () => {
+    let data = `${lang.DATE};${lang.TYPE};${lang.USER};${lang.PAYMENT}\n`
+    state.payments.forEach(payment => {
+      data += `${payment.time};${payment.ptype.name};${payment.user?.username ?? '-'};${payment.value}\n`
+    })
+    const element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data))
+    element.setAttribute('download', 'payments.csv')
+    element.style.display = 'none'
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+  }
+
   return (
     <Layout title={lang.ADMINING}>
       {!isLoading ? (
@@ -232,6 +246,10 @@ const Admin = () => {
             </>
           ) : null}
           <div id="selectIconContainer" />
+          <div>
+            <Button onClick={exportPayments}>Экспортировать платежи</Button>
+            <Button onClick={reloadActiveSessions}>Перезагрузить активные сессии</Button>
+          </div>
           <h4>Типы платежей</h4>
           <Table
             tbodyId={styles.tbody}
@@ -345,7 +363,6 @@ const Admin = () => {
             </Button>
           </form>
           <br />
-          <Button onClick={reloadActiveSessions}>Перезагрузить активные сессии</Button>
         </>
       ) : (
         <AppLoader />
