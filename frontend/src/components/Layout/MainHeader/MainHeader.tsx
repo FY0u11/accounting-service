@@ -1,19 +1,33 @@
-import { useLanguage, useLogoutHandler } from 'hooks'
-import { AppContext } from '../../../context/AppContext'
+import classNames                                 from 'classnames'
+import Link                                       from 'next/link'
+import { useRouter }                              from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import Link from 'next/link'
-import { ModalWindow, PaymentForm } from 'components'
-import { actions } from '../../../store/actions'
-import { useRouter } from 'next/router'
-import styles from './MainHeader.module.css'
-import classNames from 'classnames'
+
+import { ModalWindow, PaymentForm }               from 'components'
+import { useLogoutHandler }                       from 'hooks'
+import styles                                     from './MainHeader.module.css'
+import { AppContext }                             from '../../../context/AppContext'
+import { actions }                                from '../../../store/actions'
 
 const MainHeader = () => {
-  const { lang } = useLanguage()
-  const { state, setState } = useContext(AppContext)
-  const logoutHandler = useLogoutHandler()
+  const { state, setState }                             = useContext(AppContext)
+  const router                                          = useRouter()
   const [isPaymentModalOpened, setIsPaymentModalOpened] = useState(false)
-  const router = useRouter()
+  const logoutHandler                                   = useLogoutHandler()
+  const months                                          = [
+    state.enums.MONTHS_JAN,
+    state.enums.MONTHS_FEB,
+    state.enums.MONTHS_MAR,
+    state.enums.MONTHS_APR,
+    state.enums.MONTHS_MAY,
+    state.enums.MONTHS_JUN,
+    state.enums.MONTHS_JUL,
+    state.enums.MONTHS_AUG,
+    state.enums.MONTHS_SEP,
+    state.enums.MONTHS_OCT,
+    state.enums.MONTHS_NOV,
+    state.enums.MONTHS_DEC
+  ]
 
   useEffect(() => {
     const sidenav = document.querySelector('.sidenav')
@@ -22,21 +36,6 @@ const MainHeader = () => {
     const elems = document.querySelectorAll('.dropdown-trigger')
     M.Dropdown.init(elems)
   }, [])
-
-  const months = [
-    lang.MONTHS_JAN,
-    lang.MONTHS_FEB,
-    lang.MONTHS_MAR,
-    lang.MONTHS_APR,
-    lang.MONTHS_MAY,
-    lang.MONTHS_JUN,
-    lang.MONTHS_JUL,
-    lang.MONTHS_AUG,
-    lang.MONTHS_SEP,
-    lang.MONTHS_OCT,
-    lang.MONTHS_NOV,
-    lang.MONTHS_DEC
-  ]
 
   return (
     <div className="col s12">
@@ -59,14 +58,14 @@ const MainHeader = () => {
           <ul id="months" className="dropdown-content">
             {state.app.months.map(month => (
               <li key={month}>
-                <a onClick={() => setState(actions.setAppChosenMonth(month))}>{months[month - 1]}</a>
+                <a onClick={() => setState(actions.setAppChosenMonth(month))}>{months[+month - 1]}</a>
               </li>
             ))}
           </ul>
           <ul id="mobile-months" className="dropdown-content">
             {state.app.months.map(month => (
               <li key={month}>
-                <a onClick={() => setState(actions.setAppChosenMonth(month))}>{months[month - 1]}</a>
+                <a onClick={() => setState(actions.setAppChosenMonth(month))}>{months[+month - 1]}</a>
               </li>
             ))}
           </ul>
@@ -76,7 +75,7 @@ const MainHeader = () => {
         {router.pathname === '/' ? (
           <li>
             <a className="dropdown-trigger" data-target="mobile-years">
-              {state.app.chosenYear || lang.SELECT_YEAR}
+              {state.app.chosenYear || state.enums.SELECT_YEAR}
               <i className="material-icons right">arrow_drop_down</i>
             </a>
           </li>
@@ -84,26 +83,26 @@ const MainHeader = () => {
         {router.pathname === '/' ? (
           <li>
             <a className="dropdown-trigger" data-target="mobile-months">
-              {months[+state.app.chosenMonth - 1] || lang.SELECT_MONTH}
+              {months[+state.app.chosenMonth - 1] || state.enums.SELECT_MONTH}
               <i className="material-icons right">arrow_drop_down</i>
             </a>
           </li>
         ) : null}
         <li>
-          <a onClick={() => setIsPaymentModalOpened(true)}>{lang.ADD_BUTTON}</a>
+          <a onClick={() => setIsPaymentModalOpened(true)}>{state.enums.ADD_BUTTON}</a>
         </li>
         <li>
           <Link href="/settings">{state.user.username}</Link>
         </li>
         <li>
-          <a onClick={logoutHandler}>{lang.LOGOUT}</a>
+          <a onClick={logoutHandler}>{state.enums.LOGOUT}</a>
         </li>
       </ul>
 
       <nav className={classNames(styles.container, 'grey darken-4')}>
         <div className="nav-wrapper">
           <Link href="/">
-            <span className="brand-logo pointer">Accounting App</span>
+            <span className={classNames('brand-logo', 'pointer', styles.logo)}>Accounting App</span>
           </Link>
           <a href="#" data-target="mobile-demo" className="sidenav-trigger">
             <i className="material-icons">menu</i>
@@ -112,7 +111,7 @@ const MainHeader = () => {
             {router.pathname === '/' ? (
               <li>
                 <a className="dropdown-trigger" data-target="years">
-                  {state.app.chosenYear || lang.SELECT_YEAR}
+                  {state.app.chosenYear || state.enums.SELECT_YEAR}
                   <i className="material-icons right">arrow_drop_down</i>
                 </a>
               </li>
@@ -120,19 +119,19 @@ const MainHeader = () => {
             {router.pathname === '/' ? (
               <li>
                 <a className="dropdown-trigger" data-target="months">
-                  {months[+state.app.chosenMonth - 1] || lang.SELECT_MONTH}
+                  {months[+state.app.chosenMonth - 1] || state.enums.SELECT_MONTH}
                   <i className="material-icons right">arrow_drop_down</i>
                 </a>
               </li>
             ) : null}
             <li>
-              <a onClick={() => setIsPaymentModalOpened(true)}>{lang.ADD_BUTTON}</a>
+              <a onClick={() => setIsPaymentModalOpened(true)}>{state.enums.ADD_BUTTON}</a>
             </li>
             <li>
               <Link href="/settings">{state.user.username}</Link>
             </li>
             <li>
-              <a onClick={logoutHandler}>{lang.LOGOUT}</a>
+              <a onClick={logoutHandler}>{state.enums.LOGOUT}</a>
             </li>
           </ul>
         </div>
@@ -141,7 +140,7 @@ const MainHeader = () => {
       <ModalWindow
         isModalOpened={isPaymentModalOpened}
         setIsModalOpened={setIsPaymentModalOpened}
-        title={lang.MODAL_ADD_PAYMENT}
+        title={state.enums.MODAL_ADD_PAYMENT}
       >
         <PaymentForm />
       </ModalWindow>

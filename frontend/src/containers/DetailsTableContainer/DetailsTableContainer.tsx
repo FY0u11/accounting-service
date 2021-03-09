@@ -1,16 +1,18 @@
 import { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../../context/AppContext'
-import { Types } from '../../types'
-import { DetailsTable } from 'components'
-import { useDeletePaymentHandler } from 'hooks'
+
+import { AppLoader, DetailsTable }         from 'components'
+import { useDeleteOnePayment }             from 'hooks'
+import { AppContext }                      from '../../context/AppContext'
+import { Types }                           from '../../types'
 
 const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
+  const { state }                                     = useContext(AppContext)
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false)
-  const [isEditModalOpened, setIsEditModalOpened] = useState(false)
-  const { state } = useContext(AppContext)
-  const [selectedPayments, setSelectedPayments] = useState([] as Types.Payment[])
-  const [selectedPaymentId, setSelectedPaymentId] = useState('')
-  const deletePaymentHandler = useDeletePaymentHandler()
+  const [isEditModalOpened, setIsEditModalOpened]     = useState(false)
+  const [selectedPayments, setSelectedPayments]       = useState([] as Types.Payment[])
+  const [selectedPaymentId, setSelectedPaymentId]     = useState('')
+  const [isLoading, setIsLoading]                     = useState(false)
+  const { deleteOnePayment }                          = useDeleteOnePayment(setIsLoading)
 
   const sort = payments => {
     return [...payments].sort((p1, p2) => {
@@ -35,23 +37,29 @@ const DetailsTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
     setSelectedPayments(sort(selectedPayments))
   }, [state.app.detailsSorting])
 
-  const deleteHandler = () => {
-    deletePaymentHandler(selectedPaymentId)
+  const deleteHandler = async () => {
+    await deleteOnePayment(selectedPaymentId)
     setSelectedPaymentId('')
     setIsDeleteModalOpened(false)
   }
 
   return (
-    <DetailsTable
-      payments={selectedPayments}
-      deleteHandler={deleteHandler}
-      isDeleteModalOpened={isDeleteModalOpened}
-      setIsDeleteModalOpened={setIsDeleteModalOpened}
-      setIsEditModalOpened={setIsEditModalOpened}
-      isEditModalOpened={isEditModalOpened}
-      selectedPaymentId={selectedPaymentId}
-      setSelectedPaymentId={setSelectedPaymentId}
-    />
+    <>
+      {!isLoading ? (
+        <DetailsTable
+          payments={selectedPayments}
+          deleteHandler={deleteHandler}
+          isDeleteModalOpened={isDeleteModalOpened}
+          setIsDeleteModalOpened={setIsDeleteModalOpened}
+          setIsEditModalOpened={setIsEditModalOpened}
+          isEditModalOpened={isEditModalOpened}
+          selectedPaymentId={selectedPaymentId}
+          setSelectedPaymentId={setSelectedPaymentId}
+        />
+      ) : (
+        <AppLoader />
+      )}
+    </>
   )
 }
 

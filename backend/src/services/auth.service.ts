@@ -14,10 +14,7 @@ export const authService = async (user: UserDoc) => {
       message: 'Invalid login or password'
     }
   const tokenSecret = process.env.SECRET || ''
-  return {
-    data: sign({ id: candidate._id, username: candidate.username, role: candidate.role }, tokenSecret, {
-      expiresIn: '8h'
-    }),
-    success: true
-  }
+  return sign({ id: candidate._id, username: candidate.username, role: candidate.role }, tokenSecret, {
+    expiresIn: '8h'
+  })
 }

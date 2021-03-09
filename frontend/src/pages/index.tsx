@@ -1,15 +1,17 @@
-import { useContext, useEffect, useState } from 'react'
-import { useLanguage } from 'hooks'
-import React from 'react'
-import { AppContext } from '../context/AppContext'
-import moment from 'moment'
-import { Layout } from 'components'
-import { SummaryTableContainer } from 'containers'
-import { actions } from '../store/actions'
+import moment                              from 'moment'
+import React, {
+  useContext,
+  useEffect,
+  useState
+}                                          from 'react'
+
+import { Layout }                          from 'components'
+import { SummaryTableContainer }           from 'containers'
+import { AppContext }                      from '../context/AppContext'
+import { actions }                         from '../store/actions'
 
 const HomePage = () => {
-  const { lang } = useLanguage()
-  const { state, setState } = useContext(AppContext)
+  const { state, setState }                     = useContext(AppContext)
   const [selectedPayments, setSelectedPayments] = useState([])
 
   const getYearMonths = (year: string): [string, string[]] => {
@@ -66,7 +68,7 @@ const HomePage = () => {
   }, [state.app.chosenMonth])
 
   return (
-    <Layout title={lang.DOCUMENT_TITLE_HOME}>
+    <Layout title={state.enums.DOCUMENT_TITLE_HOME}>
       <SummaryTableContainer payments={selectedPayments} />
     </Layout>
   )

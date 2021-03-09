@@ -1,21 +1,22 @@
-import { SortingHeader, Table } from 'components'
-import styles from './SummaryTable.module.css'
-import Link from 'next/link'
-import { useLanguage } from 'hooks'
-import { Types } from '../../types'
-import moment from 'moment'
-import { useContext } from 'react'
-import { AppContext } from '../../context/AppContext'
+import moment                   from 'moment'
+import Link                     from 'next/link'
+import { useContext }           from 'react'
 
-type SummaryTableProps = {
-  payments: Types.SummaryPayment[]
-}
+import { SortingHeader, Table } from 'components'
+import styles                   from './SummaryTable.module.css'
+import { AppContext }           from '../../context/AppContext'
+import { Types }                from '../../types'
+
+type SummaryTableProps = { payments: Types.SummaryPayment[] }
 
 const SummaryTable = ({ payments }: SummaryTableProps) => {
-  const { lang } = useLanguage()
-  const { state } = useContext(AppContext)
-  const totalValue = payments.reduce((acc, payment) => (acc += +payment.total), 0)
-  const holidayPattern = new RegExp(`(${lang.SATURDAY.replace('.', '')}|${lang.SUNDAY.replace('.', '')})`, 'i')
+  const { state }      = useContext(AppContext)
+  const totalValue     = payments.reduce((acc, payment) => (acc += +payment.total), 0)
+  const holidayPattern = new RegExp(
+    `(${state.enums.SATURDAY.replace('.', '')}|${state.enums.SUNDAY.replace('.', '')})`,
+    'i'
+  )
+
   return (
     <div className={styles.container}>
       <Table
@@ -25,7 +26,7 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
         thead={
           <tr>
             <th>
-              <SortingHeader by={'day'}>{lang.DAY}</SortingHeader>
+              <SortingHeader by={'day'}>{state.enums.DAY}</SortingHeader>
             </th>
             {state.ptypes.map((ptype, i) => (
               <th key={i}>
@@ -33,7 +34,7 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
               </th>
             ))}
             <th>
-              <SortingHeader by={'total'}>{lang.TOTAL}</SortingHeader>
+              <SortingHeader by={'total'}>{state.enums.TOTAL}</SortingHeader>
             </th>
           </tr>
         }
@@ -69,7 +70,7 @@ const SummaryTable = ({ payments }: SummaryTableProps) => {
               )
             })}
             <tr>
-              <td>{lang.TOTAL}</td>
+              <td>{state.enums.TOTAL}</td>
               {state.ptypes.map((ptype, i) => {
                 const total = payments.reduce(
                   (acc, payment) => (acc += payment[ptype.name] ? +payment[ptype.name] : 0),

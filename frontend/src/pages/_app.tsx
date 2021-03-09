@@ -1,16 +1,18 @@
-import NProgress from 'nprogress'
-import Router, { useRouter } from 'next/router'
-import '../styles/default.css'
+import { AppProps }                                                  from 'next/app'
+import Router, { useRouter }                                         from 'next/router'
+import NProgress                                                     from 'nprogress'
+import React, { useEffect, useReducer }                              from 'react'
+import { io }                                                        from 'socket.io-client'
+
+import { getActivePtypes, getAllPayments, getSelf, getSelfPayments } from 'api'
+import { AppLoader }                                                 from 'components'
+import { useApi }                                                    from 'hooks'
+import { getTokenPayload }                                           from 'utils'
+import { AppContext }                                                from '../context/AppContext'
+import { actions }                                                   from '../store/actions'
+import { initialState, reducer }                                     from '../store/reducers'
 import 'nprogress/nprogress.css'
-import React, { useEffect, useReducer } from 'react'
-import { AppProps } from 'next/app'
-import { AppContext } from '../context/AppContext'
-import { io } from 'socket.io-client'
-import { initialState, reducer } from '../store/reducers'
-import { actions } from '../store/actions'
-import { getTokenPayload } from 'utils'
-import { AppLoader } from 'components'
-import { getActivePtypes, getAllPayments, getSelf, getSelfPayments, updateUser } from 'api'
+import '../styles/default.css'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -18,9 +20,11 @@ Router.events.on('routeChangeError', () => NProgress.done())
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [state, setState] = useReducer(reducer, initialState)
-  const router = useRouter()
+  const router            = useRouter()
+  const { request }       = useApi(state)
+
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (window) await import('../../node_modules/materialize-css/dist/js/materialize.min')
       const token = window.localStorage.getItem('token')
       if (!token) {
@@ -40,8 +44,8 @@ const App = ({ Component, pageProps }: AppProps) => {
       let user
       try {
         payload = getTokenPayload(state.user.token)
-        user = await getSelf(state.user.token)
-      } catch (e) {
+        user = await request(getSelf)
+      } catch {
         setState(actions.setUserToken(null))
         window.localStorage.removeItem('token')
         await router.push('/auth')
@@ -62,25 +66,33 @@ const App = ({ Component, pageProps }: AppProps) => {
       socket.on('message', message => {
         if (message === 'update page') router.reload()
       })
-      const payments =
-        user.role === 'admin' && JSON.parse(user.settings).showAllPayments
-          ? await getAllPayments(state.user.token)
-          : await getSelfPayments(state.user.token)
-      const ptypes = await getActivePtypes(state.user.token)
-      setState(actions.setPayments(payments))
-      setState(actions.setPtypes(ptypes))
-      setState(actions.setIsLoading(false))
+      try {
+        const payments =
+          user.role === 'admin' && JSON.parse(user.settings).showAllPayments
+            ? await request(getAllPayments)
+            : await request(getSelfPayments)
+        const ptypes = await request(getActivePtypes)
+        setState(actions.setPayments(payments))
+        setState(actions.setPtypes(ptypes))
+        setState(actions.setIsLoading(false))
+      } catch {
+        return
+      }
     })()
   }, [state.user.token])
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (!state.user.token) return
-      const payments =
-        state.user.role === 'admin' && state.user.settings.showAllPayments
-          ? await getAllPayments(state.user.token)
-          : await getSelfPayments(state.user.token)
-      setState(actions.setPayments(payments))
+      try {
+        const payments =
+          state.user.role === 'admin' && state.user.settings.showAllPayments
+            ? await request(getAllPayments)
+            : await request(getSelfPayments)
+        setState(actions.setPayments(payments))
+      } catch {
+        return
+      }
     })()
   }, [state.user.settings.showAllPayments])
 

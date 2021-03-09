@@ -1,8 +1,3 @@
 .value {
     color: var(--primary-text);
 }
-
-/*.input + span::after {*/
-/*    background: var(--primary-text) !important;*/
-/*    border: 2px solid var(--primary-text) !important;*/
-/*}*/

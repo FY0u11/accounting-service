@@ -1,21 +1,22 @@
-import React from 'react'
+import React  from 'react'
+
 import { nF } from 'utils'
 import styles from './RadioInput.module.css'
 
 type RadioInputProps = {
   onChangeHandler?: () => void
-  group?: string
-  id: string
-  children?: React.ReactNode
-  isChecked?: boolean
+  group?          : string
+  children?       : React.ReactNode
+  isChecked?      : boolean
+  id              : string
 }
 
-const RadioInput = ({
+const RadioInput  = ({
   onChangeHandler = nF,
-  group = 'default',
-  id,
-  children = null,
-  isChecked = false
+  group           = 'default',
+  children        = null,
+  isChecked       = false,
+  id
 }: RadioInputProps) => {
   return (
     <p>

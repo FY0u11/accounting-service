@@ -1,8 +1,9 @@
-import styles from './UserRow.module.css'
 import { Delete, Edit } from '@material-ui/icons'
-import { Types } from '../../../types'
 
-type UserRowProps = { user: Types.User; deleteUserHandler: (id: string) => void; editUserHandler: () => void }
+import styles           from './UserRow.module.css'
+import { Types }        from '../../../types'
+
+type UserRowProps = { user: Types.AdminUser; deleteUserHandler: (id: string) => void; editUserHandler: () => void }
 
 const UserRow = ({ user, deleteUserHandler, editUserHandler }: UserRowProps) => {
   return (

@@ -1,18 +1,18 @@
-import { MouseEvent, useContext, useEffect, useState } from 'react'
-import { useAddPaymentHandler, useLanguage } from 'hooks'
-import styles from './PaymentForm.module.css'
-import { Button, RadioInput, TextInput } from 'components'
-import { AppContext } from '../../context/AppContext'
-import { verifyPayment } from 'utils'
+import { useContext, useEffect, useState } from 'react'
+
+import { Button, RadioInput, TextInput }   from 'components'
+import { useCreatePayment }                from 'hooks'
+import { verifyPayment }                   from 'utils'
+import styles                              from './PaymentForm.module.css'
+import { AppContext }                      from '../../context/AppContext'
 
 const PaymentForm = () => {
-  const { state } = useContext(AppContext)
-  const [ptype, setPtype] = useState(state.ptypes[0]._id)
-  const [value, setValue] = useState('')
-  const [inputEl, setInputEl] = useState(null)
+  const { state }                 = useContext(AppContext)
+  const [ptype, setPtype]         = useState(state.ptypes[0]._id)
+  const [value, setValue]         = useState('')
+  const [inputEl, setInputEl]     = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { lang } = useLanguage()
-  const addPaymentHandler = useAddPaymentHandler()
+  const { createPayment }         = useCreatePayment(setIsLoading)
 
   useEffect(() => {
     const inputEl = document.getElementById('addPaymentForm')
@@ -20,19 +20,10 @@ const PaymentForm = () => {
     inputEl.focus()
   }, [])
 
-  const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (!verifyPayment(value)) return
-    if (!value) return
+  const onClickHandler = async () => {
+    inputEl.focus()
+    await createPayment({ value: +value, ptype })
     setValue('')
-    try {
-      setIsLoading(true)
-      inputEl.focus()
-      await addPaymentHandler({ value: +value, ptype })
-      setIsLoading(false)
-    } catch (e) {
-      console.log(e.message)
-    }
   }
 
   return (
@@ -44,7 +35,7 @@ const PaymentForm = () => {
             if (!verifyPayment(v)) return
             setValue(v)
           }}
-          placeholder={lang.INPUT_PAYMENT}
+          placeholder={state.enums.INPUT_PAYMENT}
           id="addPaymentForm"
         />
         {state.ptypes.map((ptype, i) => {
@@ -65,7 +56,7 @@ const PaymentForm = () => {
         })}
       </div>
       <Button onClick={onClickHandler} disabled={!verifyPayment(value) || isLoading || !value}>
-        {lang.ADD_PAYMENT}
+        {state.enums.ADD_PAYMENT}
       </Button>
     </form>
   )

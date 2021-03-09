@@ -1,38 +1,19 @@
-import { useRouter } from 'next/router'
-import { MouseEvent, useContext, useEffect, useState } from 'react'
-import { AppContext } from '../../context/AppContext'
-import styles from './Auth.module.css'
-import { Button, Layout } from 'components'
-import { saveToken } from 'utils'
-import { authenticate } from 'api'
-import { actions } from '../../store/actions'
-import { useLanguage } from 'hooks'
+import { useRouter }             from 'next/router'
+import { useContext, useEffect } from 'react'
+
+import { Button, Layout }        from 'components'
+import { useLogin }              from 'hooks'
+import styles                    from './Auth.module.css'
+import { AppContext }            from '../../context/AppContext'
 
 const Auth = () => {
-  const [form, setForm] = useState({ username: '', password: '' })
-  const { state, setState } = useContext(AppContext)
-  const { lang } = useLanguage()
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const { state }                           = useContext(AppContext)
+  const router                              = useRouter()
+  const { login, form, setForm, isLoading } = useLogin()
 
   useEffect(() => {
     if (state.user.token) router.push('/')
   }, [])
-
-  const loginHandler = async (e: MouseEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    const result = await authenticate(form.username, form.password)
-    if (result.success) {
-      saveToken(result.data)
-      setState(actions.setUserToken(result.data))
-      router.push('/')
-    } else {
-      M.toast({ html: lang[result.message] })
-      setForm({ username: '', password: '' })
-    }
-    setIsLoading(false)
-  }
 
   return (
     <>
@@ -62,7 +43,7 @@ const Auth = () => {
                 />
               </label>
               <div>
-                <Button onClick={loginHandler} disabled={isLoading}>
+                <Button onClick={login} disabled={isLoading || !form.username || !form.password}>
                   Войти
                 </Button>
               </div>

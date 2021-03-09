@@ -1,20 +1,34 @@
+import { useRouter }              from 'next/router'
+import React, { useContext }      from 'react'
+
+import { updateUserApi }             from 'api'
 import { Button, Layout, Switch } from 'components'
-import { useLanguage } from 'hooks'
-import { useRouter } from 'next/router'
-import React, { useContext } from 'react'
-import { AppContext } from '../../context/AppContext'
-import styles from './Settings.module.css'
-import { actions } from '../../store/actions'
-import { updateUser } from 'api'
+import { useApi }                 from 'hooks'
+import styles                     from './Settings.module.css'
+import { AppContext }             from '../../context/AppContext'
+import { actions }                from '../../store/actions'
 
 const Settings = () => {
-  const { lang } = useLanguage()
-  const router = useRouter()
   const { state, setState } = useContext(AppContext)
+  const router              = useRouter()
+  const { request }         = useApi()
+
+  const updateUserHandler = async () => {
+    try {
+      await request(updateUserApi, {
+        _id: state.user._id,
+        settings: JSON.stringify({ ...state.user.settings, showAllPayments: !state.user.settings.showAllPayments })
+      })
+      setState(actions.setUserSettings({ showAllPayments: !state.user.settings.showAllPayments }))
+    } catch {
+      return
+    }
+  }
+
   return (
-    <Layout title={lang.SETTINGS}>
+    <Layout title={state.enums.SETTINGS}>
       <div>
-        <h2>{lang.SETTINGS}</h2>
+        <h2>{state.enums.SETTINGS}</h2>
         {state.user.role === 'admin' ? (
           <>
             <p className={styles.show_all_payments}>
@@ -24,18 +38,11 @@ const Settings = () => {
                 yes="Да"
                 no="Нет"
                 checked={state.user.settings.showAllPayments || false}
-                checkHandler={async () => {
-                  await updateUser(
-                    state.user._id,
-                    { settings: JSON.stringify({ showAllPayments: !state.user.settings.showAllPayments }) },
-                    state.user.token
-                  )
-                  setState(actions.setUserSettings({ showAllPayments: !state.user.settings.showAllPayments }))
-                }}
+                checkHandler={updateUserHandler}
               />
             </p>
             <p>
-              <Button onClick={() => router.push('/admin')}>{lang.ADMINING}</Button>
+              <Button onClick={() => router.push('/admin')}>{state.enums.ADMINING}</Button>
             </p>
           </>
         ) : null}

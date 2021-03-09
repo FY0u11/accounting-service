@@ -1,22 +1,28 @@
-import styles from './DetailsTable.module.css'
-import { useLanguage } from 'hooks'
-import { Types } from '../../types'
-import { Edit, Close } from '@material-ui/icons'
-import { YesCancelModal, SortingHeader, ModalWindow, EditPaymentForm, Table } from 'components'
+import { Edit, Close }       from '@material-ui/icons'
+import moment                from 'moment'
 import React, { useContext } from 'react'
-import moment from 'moment'
-import { getIcon } from 'utils'
-import { AppContext } from '../../context/AppContext'
 
-type DetailsTableProps = {
-  payments: Types.Payment[]
-  deleteHandler: () => void
-  isDeleteModalOpened: boolean
+import {
+  YesCancelModal,
+  SortingHeader,
+  ModalWindow,
+  EditPaymentForm,
+  Table
+}                            from 'components'
+import { getIcon }           from 'utils'
+import styles                from './DetailsTable.module.css'
+import { AppContext }        from '../../context/AppContext'
+import { Types }             from '../../types'
+
+type DetailsTableProps  = {
+  payments              : Types.Payment[]
+  deleteHandler         : () => void
+  isDeleteModalOpened   : boolean
   setIsDeleteModalOpened: Types.SetState<boolean>
-  isEditModalOpened: boolean
-  setIsEditModalOpened: Types.SetState<boolean>
-  selectedPaymentId: string
-  setSelectedPaymentId: Types.SetState<string>
+  isEditModalOpened     : boolean
+  setIsEditModalOpened  : Types.SetState<boolean>
+  selectedPaymentId     : string
+  setSelectedPaymentId  : Types.SetState<string>
 }
 
 const DetailsTable = ({
@@ -29,24 +35,27 @@ const DetailsTable = ({
   selectedPaymentId,
   setSelectedPaymentId
 }: DetailsTableProps) => {
-  const { lang } = useLanguage()
-  const tableHeaders = {
-    time: lang.TIME,
-    value: lang.PAYMENT,
-    ptype: lang.TYPE
+  const { state }     = useContext(AppContext)
+  const totalValue    = payments.reduce((acc, payment) => (acc += payment.value), 0)
+  const tableHeaders  = {
+    time : state.enums.TIME,
+    value: state.enums.PAYMENT,
+    ptype: state.enums.TYPE
   }
-  const totalValue = payments.reduce((acc, payment) => (acc += payment.value), 0)
-  const { state } = useContext(AppContext)
 
   return (
     <div className={styles.container}>
       <YesCancelModal
-        title={lang.CONFIRM_DELETE}
+        title={state.enums.CONFIRM_DELETE}
         isModalOpened={isDeleteModalOpened}
         setIsModalOpened={setIsDeleteModalOpened}
         yesClickHandler={deleteHandler}
       />
-      <ModalWindow isModalOpened={isEditModalOpened} setIsModalOpened={setIsEditModalOpened} title={lang.EDIT_PAYMENT}>
+      <ModalWindow
+        isModalOpened={isEditModalOpened}
+        setIsModalOpened={setIsEditModalOpened}
+        title={state.enums.EDIT_PAYMENT}
+      >
         <EditPaymentForm
           selectedPayment={payments.find(p => p._id === selectedPaymentId)}
           setIsModalOpened={setIsEditModalOpened}
@@ -57,7 +66,7 @@ const DetailsTable = ({
         thead={
           <tr>
             <th className={styles.desktop_th}>
-              <SortingHeader>{lang.NUMBER}</SortingHeader>
+              <SortingHeader>{state.enums.NUMBER}</SortingHeader>
             </th>
             {Object.keys(tableHeaders).map(type => (
               <th key={type + 'header'}>
@@ -69,12 +78,12 @@ const DetailsTable = ({
             {state.user.settings.showAllPayments ? (
               <th>
                 <SortingHeader by="username" type="details">
-                  {lang.USER}
+                  {state.enums.USER}
                 </SortingHeader>
               </th>
             ) : null}
             <th>
-              <SortingHeader>{lang.ACTIONS}</SortingHeader>
+              <SortingHeader>{state.enums.ACTIONS}</SortingHeader>
             </th>
           </tr>
         }
@@ -120,7 +129,7 @@ const DetailsTable = ({
               )
             })}
             <tr className={styles.total_by}>
-              <td>{lang.TOTAL}</td>
+              <td>{state.enums.TOTAL}</td>
               <td />
               <td className={totalValue < 0 ? 'outcome' : null}>{totalValue.toLocaleString().replace(/^0$/, '-')}</td>
             </tr>

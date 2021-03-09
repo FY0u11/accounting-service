@@ -1,15 +1,16 @@
-import styles from '../../../pages/admin/Admin.module.css'
+import { useEffect }                                    from 'react'
+
 import { Button, CustomSelect, ModalWindow, TextInput } from 'components'
-import { Types } from '../../../types'
-import { useEffect } from 'react'
-import { verifyPassword, verifyUsername } from 'utils'
+import { verifyPassword, verifyUsername }               from 'utils'
+import styles                                           from '../../../pages/admin/Admin.module.css'
+import { Types }                                        from '../../../types'
 
 type EditUserFormProps = {
-  isEditModalOpened: boolean
+  isEditModalOpened   : boolean
   setIsEditModalOpened: Types.SetState<boolean>
-  editedUser: Types.UserToUpdate
-  setEditedUser: Types.SetState<Types.UserToUpdate>
-  confirmEdit: () => void
+  editedUser          : Types.UserToUpdate
+  setEditedUser       : Types.SetState<Types.UserToUpdate>
+  confirmEdit         : () => void
 }
 
 const EditUserForm = ({
@@ -66,9 +67,7 @@ const EditUserForm = ({
           label="Изменить роль:"
         />
         <div>
-          <Button onClick={confirmEdit} disabled={!editedUser.username?.trim() || !editedUser.password?.trim()}>
-            Изменить
-          </Button>
+          <Button onClick={confirmEdit}>Изменить</Button>
         </div>
       </form>
     </ModalWindow>

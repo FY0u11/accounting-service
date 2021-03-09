@@ -40,11 +40,9 @@ const update = async (update: { value?: number; ptype?: Schema.Types.ObjectId },
   candidate.value = update.value ?? candidate.value
   candidate.ptype = update.ptype ?? candidate.ptype
   await candidate.save()
-  return Payment.findById(candidate._id, { user: 0 }).populate({
-    path: 'ptype',
-    match: { isActive: true },
-    select: 'name icon'
-  })
+  return Payment.findById(candidate._id)
+    .populate({ path: 'ptype',  match: { isActive: true }, select: 'name icon' })
+    .populate('user', '-_id username')
 }
 
 export const paymentsService = {

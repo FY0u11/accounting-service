@@ -1,35 +1,33 @@
-import Button from './Button/Button'
-import CustomSelect from './CustomSelect/CustomSelect'
-import DetailsTable from './DetailsTable/DetailsTable'
-import Layout from './Layout/Layout'
-import ModalWindow from './ModalWindow/ModalWindow'
-import PaymentForm from './PaymentForm/PaymentForm'
-import RadioInput from './RadioInput/RadioInput'
-import SortingHeader from 'components/SortingHeader/SortingHeader'
-import SummaryTable from './SummaryTable/SummaryTable'
-import TextInput from './TextInput/TextInput'
-import YesCancelModal from './YesCancelModal/YesCancelModal'
+import AppLoader       from './AppLoader/AppLoader'
+import Button          from './Button'
+import CustomSelect    from './CustomSelect'
+import DetailsTable    from './DetailsTable/DetailsTable'
 import EditPaymentForm from './EditPaymentForm/EditPaymentForm'
-import PtypeRow from '../adminPanel/components/PtypeRow/PtypeRow'
-import Table from './Table/Table'
-import AppLoader from './AppLoader/AppLoader'
-import Switch from './Switch/Switch'
+import Layout          from './Layout/Layout'
+import ModalWindow     from './ModalWindow/ModalWindow'
+import PaymentForm     from './PaymentForm/PaymentForm'
+import RadioInput      from './RadioInput/RadioInput'
+import SortingHeader   from './SortingHeader/SortingHeader'
+import SummaryTable    from './SummaryTable/SummaryTable'
+import Switch          from './Switch/Switch'
+import Table           from './Table/Table'
+import TextInput       from './TextInput/TextInput'
+import YesCancelModal  from './YesCancelModal/YesCancelModal'
 
 export {
+  AppLoader,
   Button,
   CustomSelect,
   DetailsTable,
+  EditPaymentForm,
   Layout,
   ModalWindow,
   PaymentForm,
   RadioInput,
   SortingHeader,
   SummaryTable,
-  TextInput,
-  YesCancelModal,
-  EditPaymentForm,
-  PtypeRow,
+  Switch,
   Table,
-  AppLoader,
-  Switch
+  TextInput,
+  YesCancelModal
 }

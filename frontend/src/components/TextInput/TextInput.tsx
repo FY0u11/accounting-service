@@ -1,11 +1,7 @@
-import styles from './TextInput.module.css'
 import { nF } from 'utils'
+import styles from './TextInput.module.css'
 
-type TextInputProps = {
-  value?: string
-  onChangeHandler?: (value: string) => void
-  [prop: string]: unknown
-}
+type TextInputProps = { value?: string; onChangeHandler?: (value: string) => void; [prop: string]: unknown }
 
 const TextInput = ({ value = '', onChangeHandler = nF, ...props }: TextInputProps) => {
   return (

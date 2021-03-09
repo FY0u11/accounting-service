@@ -1,35 +1,22 @@
-import { MouseEvent, useContext, useEffect, useState } from 'react'
-import { useEditPaymentHandler, useLanguage } from 'hooks'
-import { Types } from '../../types'
-import styles from './EditPaymentForm.module.css'
-import { Button, RadioInput, TextInput } from 'components'
-import { AppContext } from '../../context/AppContext'
-import { verifyPayment } from 'utils'
+import { useContext, useEffect, useState } from 'react'
 
-const EditPaymentForm = ({
-  selectedPayment,
-  setIsModalOpened
-}: {
-  selectedPayment: Types.Payment
-  setIsModalOpened: Types.SetState<boolean>
-}) => {
-  const [ptypeId, setPtypeId] = useState(selectedPayment.ptype._id)
-  const [value, setValue] = useState('' + selectedPayment.value)
-  const [inputEl, setInputEl] = useState(null)
-  const { lang } = useLanguage()
-  const { state } = useContext(AppContext)
-  const editPaymentHandler = useEditPaymentHandler()
+import { Button, RadioInput, TextInput }   from 'components'
+import { verifyPayment }                   from 'utils'
+import styles                              from './EditPaymentForm.module.css'
+import { AppContext }                      from '../../context/AppContext'
+import { useUpdatePayment }                from '../../hooks/useUpdatePayment'
+import { Types }                           from '../../types'
 
-  const editHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (!verifyPayment(value)) return
-    setValue('')
+type EditPaymentFormProps = { selectedPayment : Types.Payment; setIsModalOpened: Types.SetState<boolean> }
+
+const EditPaymentForm = ({ selectedPayment, setIsModalOpened }: EditPaymentFormProps) => {
+  const { state }                                   = useContext(AppContext)
+  const [inputEl, setInputEl]                       = useState(null)
+  const { updatePayment, form, setForm, isLoading } = useUpdatePayment(selectedPayment)
+
+  const updateHandler = async () => {
+    await updatePayment()
     setIsModalOpened(false)
-    try {
-      editPaymentHandler(selectedPayment._id, { value: +value, ptype: ptypeId })
-    } catch (e) {
-      console.log(e.message)
-    }
   }
 
   useEffect(() => {
@@ -42,12 +29,12 @@ const EditPaymentForm = ({
     <form className={styles.container}>
       <div>
         <TextInput
-          value={value}
+          value={'' + form.value}
           onChangeHandler={v => {
             if (!verifyPayment(v)) return
-            setValue(v)
+            setForm({ ...form, value: +v })
           }}
-          placeholder={lang.INPUT_PAYMENT}
+          placeholder={state.enums.INPUT_PAYMENT}
           id="editPaymentForm"
         />
         {state.ptypes.map(ptype => (
@@ -56,7 +43,7 @@ const EditPaymentForm = ({
             id={ptype._id}
             onChangeHandler={() => {
               inputEl.focus()
-              setPtypeId(ptype._id)
+              setForm({ ...form, ptype: ptype._id })
             }}
             isChecked={selectedPayment.ptype._id === ptype._id}
             key={ptype._id}
@@ -65,8 +52,8 @@ const EditPaymentForm = ({
           </RadioInput>
         ))}
       </div>
-      <Button onClick={editHandler} disabled={!verifyPayment(value) || !value}>
-        {lang.READY}
+      <Button onClick={updateHandler} disabled={!verifyPayment('' + form.value) || isLoading || !form.value}>
+        {state.enums.READY}
       </Button>
     </form>
   )

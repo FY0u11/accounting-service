@@ -1,81 +1,31 @@
 import { Types } from '../../types'
 
 const serverQuery = async (url = '/', method = 'GET', token = null, body = null) => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-      method,
-      headers: {
-        Authorization: token ? 'BEARER ' + token : null,
-        'Content-Type': 'application/json'
-      },
-      body: body ? JSON.stringify(body) : null
-    })
-    return await response.json()
-  } catch (e) {
-    console.log(e.message)
-  }
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+    method,
+    headers: {
+      Authorization: token ? 'BEARER ' + token : null,
+      'Content-Type': 'application/json'
+    },
+    body: body ? JSON.stringify(body) : null
+  })
+  const result = await response.json()
+  if ('success' in result && !result.success) throw { message: result.message }
+  return result
 }
-
-export const deleteOnePayment = async (id: string, token: string) => {
-  return await serverQuery(`/payments/${id}`, 'DELETE', token)
-}
-
-export const createPayment = async (payment: Types.PaymentForCreate, token: string) => {
-  return await serverQuery(`/payments`, 'POST', token, payment)
-}
-
-export const getSelfPayments = async (token: string) => {
-  return await serverQuery(`/payments`, 'GET', token)
-}
-
-export const getAllPayments = async (token: string) => {
-  return await serverQuery(`/payments?all`, 'GET', token)
-}
-
-export const getActivePtypes = async (token: string) => {
-  return await serverQuery(`/ptypes`, 'GET', token)
-}
-
-export const getAllPtypes = async (token: string) => {
-  return await serverQuery(`/ptypes?all`, 'GET', token)
-}
-
-export const authenticate = async (username: string, password: string) => {
-  return await serverQuery(`/auth`, 'POST', null, { username, password })
-}
-
-export const updatePayment = async (id: string, payment: Types.PaymentForCreate, token: string) => {
-  return await serverQuery(`/payments/${id}`, 'PUT', token, payment)
-}
-
-export const updatePtype = async (id: string, ptype: Types.PtypeToUpdate, token: string) => {
-  return await serverQuery(`/ptypes/${id}`, 'PUT', token, ptype)
-}
-
-export const createPtype = async (ptype: Types.PtypeToCreate, token: string) => {
-  return await serverQuery(`/ptypes`, 'POST', token, ptype)
-}
-
-export const deleteOnePtype = async (id: string, token: string) => {
-  return await serverQuery(`/ptypes/${id}`, 'DELETE', token)
-}
-
-export const getAllUsers = async (token: string) => {
-  return await serverQuery('/users', 'GET', token)
-}
-
-export const deleteOneUser = async (id: string, token: string) => {
-  return await serverQuery(`/users/${id}`, 'DELETE', token)
-}
-
-export const createUser = async (user: Types.UserToCreate, token: string) => {
-  return await serverQuery(`/users`, 'POST', token, user)
-}
-
-export const updateUser = async (id: string, user: Types.UserToUpdate, token: string) => {
-  return await serverQuery(`/users/${id}`, 'PUT', token, user)
-}
-
-export const getSelf = async (token: string) => {
-  return await serverQuery('/users/self', 'GET', token)
-}
+export const deleteOnePaymentApi = (id: string, token: string)                      => serverQuery(`/payments/${id}`, 'DELETE', token)
+export const createPaymentApi    = (payment: Types.PaymentForCreate, token: string) => serverQuery(`/payments`, 'POST', token, payment)
+export const getSelfPayments     = (token: string)                                  => serverQuery(`/payments`, 'GET', token)
+export const getAllPayments      = (token: string)                                  => serverQuery(`/payments?all`, 'GET', token)
+export const getActivePtypes     = (token: string)                                  => serverQuery(`/ptypes`, 'GET', token)
+export const getAllPtypesApi     = (token: string)                                  => serverQuery(`/ptypes?all`, 'GET', token)
+export const authenticate        = (username: string, password: string)             => serverQuery(`/auth`, 'POST', null, { username, password })
+export const updatePaymentApi    = (payment: Types.Payment, token: string)          => serverQuery(`/payments/${payment._id}`, 'PUT', token, payment)
+export const updatePtypeApi      = (ptype: Types.PtypeToUpdate, token: string)      => serverQuery(`/ptypes/${ptype._id}`, 'PUT', token, ptype)
+export const createPtypeApi      = (ptype: Types.PtypeToCreate, token: string)      => serverQuery(`/ptypes`, 'POST', token, ptype)
+export const deleteOnePtypeApi   = (id: string, token: string)                      => serverQuery(`/ptypes/${id}`, 'DELETE', token)
+export const getAllUsersApi      = (token: string)                                  => serverQuery('/users', 'GET', token)
+export const deleteOneUserApi    = (id: string, token: string)                      => serverQuery(`/users/${id}`, 'DELETE', token)
+export const createUserApi       = (user: Types.UserToCreate, token: string)        => serverQuery(`/users`, 'POST', token, user)
+export const updateUserApi       = (user: Types.UserToUpdate, token: string)        => serverQuery(`/users/${user._id}`, 'PUT', token, user)
+export const getSelf             = (token: string)                                  => serverQuery('/users/self', 'GET', token)

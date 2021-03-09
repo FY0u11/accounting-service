@@ -1,14 +1,15 @@
-import styles from '../../../pages/admin/Admin.module.css'
+import { useEffect }                      from 'react'
+
 import { Button, ModalWindow, TextInput } from 'components'
-import { Types } from '../../../types'
-import { useEffect } from 'react'
+import styles                             from '../../../pages/admin/Admin.module.css'
+import { Types }                          from '../../../types'
 
 type EditPtypeFormProps = {
-  isEditModalOpened: boolean
+  isEditModalOpened   : boolean
   setIsEditModalOpened: Types.SetState<boolean>
-  editedPtype: Types.PtypeToUpdate
-  setEditedPtype: Types.SetState<Types.PtypeToUpdate>
-  confirmEdit: () => void
+  editedPtype         : Types.PtypeToUpdate
+  setEditedPtype      : Types.SetState<Types.PtypeToUpdate>
+  confirmEdit         : () => void
 }
 
 const EditPtypeForm = ({

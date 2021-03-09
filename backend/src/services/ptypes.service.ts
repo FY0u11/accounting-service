@@ -1,7 +1,9 @@
 import { Ptype, PtypeDoc } from '../models/Ptype'
 import { Schema } from 'mongoose'
 
-const create = (ptype: PtypeDoc) => {
+const create = async (ptype: PtypeDoc) => {
+  const candidate = await Ptype.findOne({ name: ptype.name })
+  if (candidate) throw { status: 400, message: 'Ptype already exists' }
   return new Ptype(ptype).save()
 }
 
@@ -22,6 +24,8 @@ const update = async (
 ) => {
   const candidate = await Ptype.findById(_id)
   if (!candidate) throw { status: 404, message: 'Ptype not found' }
+  const anotherPtype = await Ptype.findOne({ name: update.name })
+  if (anotherPtype && JSON.stringify(anotherPtype._id) !== JSON.stringify(_id)) throw { status: 400, message: 'Ptype already exists' }
   candidate.name = update.name ?? candidate.name
   candidate.isActive = update.isActive ?? candidate.isActive
   candidate.sort = update.sort ?? candidate.sort

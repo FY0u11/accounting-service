@@ -1,16 +1,15 @@
-import { useLanguage } from 'hooks'
+import moment                                     from 'moment'
+import { useRouter }                              from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../../../../context/AppContext'
-import moment from 'moment'
-import { useRouter } from 'next/router'
-import { Layout } from 'components'
-import { DetailsTableContainer } from 'containers'
+
+import { Layout }                                 from 'components'
+import { DetailsTableContainer }                  from 'containers'
+import { AppContext }                             from '../../../../context/AppContext'
 
 const DayDetails = () => {
-  const router = useRouter()
-  const { lang } = useLanguage()
-  const { state } = useContext(AppContext)
-  const [selectedPayments, setSelectedPayments] = useState([])
+  const { state }                                 = useContext(AppContext)
+  const router                                    = useRouter()
+  const [selectedPayments, setSelectedPayments]   = useState([])
 
   useEffect(() => {
     const { day, month, year } = router.query
@@ -22,7 +21,7 @@ const DayDetails = () => {
   }, [state.payments])
 
   return (
-    <Layout title={lang.DOCUMENT_TITLE_DETAILS}>
+    <Layout title={state.enums.DOCUMENT_TITLE_DETAILS}>
       <DetailsTableContainer payments={selectedPayments} />
     </Layout>
   )

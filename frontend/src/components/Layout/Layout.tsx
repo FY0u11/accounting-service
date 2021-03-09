@@ -1,24 +1,21 @@
-import Head from 'next/head'
-import { useLanguage } from 'hooks'
+import classNames            from 'classnames'
+import Head                  from 'next/head'
 import React, { useContext } from 'react'
-import MainHeader from 'components/Layout/MainHeader/MainHeader'
-import classNames from 'classnames'
-import styles from './Layout.module.css'
-import { AppContext } from '../../context/AppContext'
 
-type LayoutProps = {
-  title?: string
-  children?: React.ReactNode
-}
+import styles                from './Layout.module.css'
+import MainHeader            from './MainHeader/MainHeader'
+import { AppContext }        from '../../context/AppContext'
+
+type LayoutProps = { title?: string; children?: React.ReactNode }
 
 const Layout = ({ title = 'default page', children = null }: LayoutProps) => {
-  const { lang } = useLanguage()
   const { state } = useContext(AppContext)
+
   return (
     <div className={classNames('container', styles.container)}>
       <Head>
         <title>
-          {lang.DOCUMENT_TITLE}
+          {state.enums.DOCUMENT_TITLE}
           {title ? ` | ${title}` : null}
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />

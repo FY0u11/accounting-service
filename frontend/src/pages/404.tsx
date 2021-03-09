@@ -1,12 +1,14 @@
-import { Layout } from 'components'
-import { useLanguage } from 'hooks'
-import React from 'react'
+import React, { useContext } from 'react'
+
+import { Layout }            from 'components'
+import { AppContext }        from '../context/AppContext'
 
 const NotFound = () => {
-  const { lang } = useLanguage()
+  const { state } = useContext(AppContext)
+
   return (
-    <Layout title={lang.DOCUMENT_TITLE_NOT_FOUND}>
-      <h4>{lang.NOT_FOUND}</h4>
+    <Layout title={state.enums.DOCUMENT_TITLE_NOT_FOUND}>
+      <h4>{state.enums.NOT_FOUND}</h4>
     </Layout>
   )
 }

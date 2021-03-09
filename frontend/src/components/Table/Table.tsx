@@ -1,13 +1,14 @@
-import styles from './Table.module.css'
-import React from 'react'
 import classNames from 'classnames'
+import React      from 'react'
+
+import styles     from './Table.module.css'
 
 type TableProps = {
   trHover?: boolean
   theadId?: string
   tbodyId?: string
-  thead: React.ReactNode
-  tbody: React.ReactNode
+  thead   : React.ReactNode
+  tbody   : React.ReactNode
 }
 
 const Table = ({ trHover = false, thead, tbody, theadId = '', tbodyId = '' }: TableProps) => {

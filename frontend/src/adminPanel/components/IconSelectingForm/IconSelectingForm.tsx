@@ -1,18 +1,19 @@
-import styles from './IconSelectingForm.module.css'
+import { useEffect, useState }    from 'react'
+
 import { ModalWindow, TextInput } from 'components'
-import { Types } from '../../../types'
-import { getIcon, icons } from 'utils'
-import { useEffect, useState } from 'react'
+import { getIcon, icons }         from 'utils'
+import styles                     from './IconSelectingForm.module.css'
+import { Types }                  from '../../../types'
 
 type IconSelectingFormProps = {
-  isModalOpened: boolean
+  isModalOpened   : boolean
   setIsModalOpened: Types.SetState<boolean>
-  confirmIcon: (icon: string) => void
+  confirmIcon     : (icon: string) => void
 }
 
 const IconSelectingForm = ({ isModalOpened, setIsModalOpened, confirmIcon }: IconSelectingFormProps) => {
   const [selectedIcons, setSelectedIcons] = useState(icons)
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter]               = useState('')
 
   useEffect(() => {
     if (!isModalOpened) return

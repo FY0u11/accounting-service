@@ -1,11 +1,12 @@
+import { useRouter }  from 'next/router'
 import { useContext } from 'react'
+
 import { AppContext } from '../context/AppContext'
-import { useRouter } from 'next/router'
-import { actions } from '../store/actions'
+import { actions }    from '../store/actions'
 
 export const useLogoutHandler = () => {
-  const { setState } = useContext(AppContext)
-  const router = useRouter()
+  const { setState }          = useContext(AppContext)
+  const router                = useRouter()
   return async () => {
     setState(actions.clearState())
     window.localStorage.removeItem('token')

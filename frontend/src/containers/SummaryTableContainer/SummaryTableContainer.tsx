@@ -1,17 +1,30 @@
 import { useContext, useEffect, useState } from 'react'
-import { SummaryTable } from 'components'
-import { Types } from '../../types'
-import { AppContext } from '../../context/AppContext'
-import { useLanguage } from 'hooks'
+
+import { SummaryTable }                    from 'components'
+import { AppContext }                      from '../../context/AppContext'
+import { Types }                           from '../../types'
 
 const SummaryTableContainer = ({ payments }: { payments: Types.Payment[] }) => {
+  const { state }                               = useContext(AppContext)
   const [selectedPayments, setSelectedPayments] = useState([] as Types.SummaryPayment[])
-  const { state } = useContext(AppContext)
-  const { lang } = useLanguage()
-
-  const days = [lang.SUNDAY, lang.MONDAY, lang.TUESDAY, lang.WEDNESDAY, lang.THURSDAY, lang.FRIDAY, lang.SATURDAY]
+  const days                                    = [
+    state.enums.SUNDAY,
+    state.enums.MONDAY,
+    state.enums.TUESDAY,
+    state.enums.WEDNESDAY,
+    state.enums.THURSDAY,
+    state.enums.FRIDAY,
+    state.enums.SATURDAY
+  ]
 
   const sort = payments => {
+    if (state.app.summarySorting.by === 'day') {
+      const pattern = new RegExp('^(?<num>\\d+)')
+      return [...payments].sort((p1, p2) => +pattern.exec(p1.day).groups.num < +pattern.exec(p2.day).groups.num
+        ? state.app.summarySorting.as
+        : -state.app.summarySorting.as
+      )
+    }
     return [...payments].sort((p1, p2) =>
       (p1[state.app.summarySorting.by] ?? '') < (p2[state.app.summarySorting.by] ?? '')
         ? state.app.summarySorting.as

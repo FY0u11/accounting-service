@@ -1,19 +1,20 @@
-import { nF } from 'utils'
 import { useEffect } from 'react'
+
+import { nF }        from 'utils'
 
 type CustomSelectProps = {
   onChangeHandler?: (value: string) => void
-  values?: string[]
-  selectedValue?: string
-  title?: string
-  label?: string
+  values?         : string[]
+  selectedValue?  : string
+  title?          : string
+  label?          : string
 }
 
 const CustomSelect = ({
   onChangeHandler = nF,
-  values = [],
-  selectedValue = '',
-  title = 'default',
+  values          = [],
+  selectedValue   = '',
+  title           = 'default',
   label
 }: CustomSelectProps) => {
   useEffect(() => {

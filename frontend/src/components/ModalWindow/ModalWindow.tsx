@@ -1,22 +1,13 @@
-import styles from './ModalWindow.module.css'
-import { Close } from '@material-ui/icons'
-import { Types } from '../../types'
 import React, { useEffect } from 'react'
-import { nF } from 'utils'
+import { Close }            from '@material-ui/icons'
 
-type ModalWindowProps = {
-  isModalOpened?: boolean
-  setIsModalOpened?: Types.SetState<boolean>
-  title?: string
-  children?: React.ReactNode
-}
+import { nF }               from 'utils'
+import styles               from './ModalWindow.module.css'
+import { Types }            from '../../types'
 
-const ModalWindow = ({
-  isModalOpened = false,
-  setIsModalOpened = nF,
-  title = 'default title',
-  children = null
-}: ModalWindowProps) => {
+type ModalWindowProps = { isModalOpened?: boolean; setIsModalOpened?: Types.SetState<boolean>; title?: string; children?: React.ReactNode }
+
+const ModalWindow = ({ isModalOpened = false, setIsModalOpened = nF, title = 'default title', children = null }: ModalWindowProps) => {
   useEffect(() => {
     if (!isModalOpened) return
     document.getElementById('modal_window').addEventListener('keydown', e => {

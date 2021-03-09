@@ -28,6 +28,7 @@ const schema = new Schema<PaymentDoc>({
 schema.pre('save', { document: true }, async function () {
   const ptype = await Ptype.findById(this.ptype)
   if (!ptype) return
+  if (ptype.payments.find(id => JSON.stringify(id) === JSON.stringify(this._id))) return
   ptype.payments.push(this._id)
   ptype.save()
 })
