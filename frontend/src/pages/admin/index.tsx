@@ -123,7 +123,7 @@ const Admin = () => {
             <YesCancelModal
               isModalOpened={isPtypeDeleteModalOpened}
               setIsModalOpened={setIsPtypeDeleteModalOpened}
-              title={`Будет удалено платежей: ${amountOfPayments}. Продолжить?`}
+              title={`${state.enums.WILL_BE_REMOVED_PAYMENTS}: ${amountOfPayments}. ${state.enums.CONTINUE}?`}
               yesClickHandler={() => deleteOnePtype()}
               noClickHandler={() => setIsPtypeDeleteModalOpened(false)}
             />
@@ -148,18 +148,18 @@ const Admin = () => {
             ) : null}
             <div id="selectIconContainer" />
             <div className={styles.responsive_wrapper}>
-              <Button onClick={exportPayments}>Экспортировать платежи</Button>
-              <Button onClick={reloadActiveSessions}>Перезагрузить активные сессии</Button>
+              <Button onClick={exportPayments}>{state.enums.EXPORT_PAYMENTS}</Button>
+              <Button onClick={reloadActiveSessions}>{state.enums.RELOAD_SESSIONS}</Button>
             </div>
-            <h4>Типы платежей</h4>
+            <h4>{state.enums.PAYMENT_TYPES}</h4>
             <Table
               tbodyId={styles.tbody}
               thead={
                 <tr>
                   <th />
-                  <th>Название</th>
-                  <th>Количество платежей</th>
-                  <th>Иконка</th>
+                  <th>{state.enums.NAME}</th>
+                  <th>{state.enums.PAYMENTS_AMOUNT}</th>
+                  <th>{state.enums.ICON}</th>
                   <th />
                 </tr>
               }
@@ -180,9 +180,9 @@ const Admin = () => {
             <br />
             <form className={classNames(styles.add_new_ptype_form, styles.responsive_wrapper)}>
               <div>
-                <label htmlFor="paymentTypeInput">Добавить новый тип платежа:</label>
+                <label htmlFor="paymentTypeInput">{state.enums.ADD_NEW_PAYMENT_TYPE}:</label>
                 <TextInput
-                  placeholder="Введите название"
+                  placeholder={state.enums.INPUT_NAME}
                   id="paymentTypeInput"
                   onChangeHandler={v => {
                     if (!verifyPtypeName(v)) return
@@ -192,14 +192,14 @@ const Admin = () => {
                 />
               </div>
               <Button onClick={createPtype} disabled={!ptypeName}>
-                Добавить
+                {state.enums.ADD_BUTTON}
               </Button>
             </form>
             <br />
             <YesCancelModal
               yesClickHandler={deleteOneUser}
               noClickHandler={() => setIsUserDeleteModalOpened(false)}
-              title="Вы уверены, что хотите удалить данного пользователя?"
+              title={state.enums.CONFIRM_DELETE_USER}
               setIsModalOpened={setIsUserDeleteModalOpened}
               isModalOpened={isUserDeleteModalOpened}
             />
@@ -210,12 +210,12 @@ const Admin = () => {
               setEditedUser={setUpdatedUser}
               confirmEdit={updateUser}
             />
-            <h4>Пользователи</h4>
+            <h4>{state.enums.USERS}</h4>
             <Table
               thead={
                 <tr>
-                  <th>Имя пользователя</th>
-                  <th>Роль</th>
+                  <th>{state.enums.USERNAME}</th>
+                  <th>{state.enums.ROLE}</th>
                   <th />
                 </tr>
               }
@@ -235,9 +235,9 @@ const Admin = () => {
             <br />
             <form className={classNames(styles.add_new_ptype_form, styles.responsive_wrapper)}>
               <div>
-                <label htmlFor="username">Добавить нового пользователя:</label>
+                <label htmlFor="username">{state.enums.ADD_NEW_USER}:</label>
                 <TextInput
-                  placeholder="Введите имя пользователя"
+                  placeholder={state.enums.INPUT_USERNAME}
                   id="username"
                   onChangeHandler={username => {
                     if (!verifyUsername(username)) return
@@ -249,7 +249,7 @@ const Admin = () => {
               <div>
                 <label htmlFor="password">&nbsp;</label>
                 <TextInput
-                  placeholder="Введите пароль"
+                  placeholder={state.enums.INPUT_PASSWORD}
                   id="password"
                   onChangeHandler={password => {
                     if (!verifyPassword(password)) return
@@ -259,7 +259,7 @@ const Admin = () => {
                 />
               </div>
               <Button onClick={createUser} disabled={!userForm.password?.trim() || !userForm.username?.trim()}>
-                Добавить
+                {state.enums.ADD_BUTTON}
               </Button>
             </form>
             <br />

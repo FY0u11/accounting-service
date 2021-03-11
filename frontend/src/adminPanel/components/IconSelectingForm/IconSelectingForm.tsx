@@ -1,7 +1,8 @@
-import { useEffect, useState }    from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { ModalWindow, TextInput } from 'components'
 import { getIcon, icons }         from 'utils'
+import { AppContext } from '../../../context/AppContext'
 import styles                     from './IconSelectingForm.module.css'
 import { Types }                  from '../../../types'
 
@@ -12,6 +13,7 @@ type IconSelectingFormProps = {
 }
 
 const IconSelectingForm = ({ isModalOpened, setIsModalOpened, confirmIcon }: IconSelectingFormProps) => {
+  const { state }                         = useContext(AppContext)
   const [selectedIcons, setSelectedIcons] = useState(icons)
   const [filter, setFilter]               = useState('')
 
@@ -27,7 +29,7 @@ const IconSelectingForm = ({ isModalOpened, setIsModalOpened, confirmIcon }: Ico
   }, [filter])
 
   return (
-    <ModalWindow isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} title="Выбор иконки">
+    <ModalWindow isModalOpened={isModalOpened} setIsModalOpened={setIsModalOpened} title={state.enums.ICON_SELECTING}>
       <div id={styles.wrapper}>
         <TextInput
           value={filter}
@@ -35,7 +37,7 @@ const IconSelectingForm = ({ isModalOpened, setIsModalOpened, confirmIcon }: Ico
             if (!/^\w{0,30}$/.test(v)) return
             setFilter(v)
           }}
-          placeholder="Введите ключевое слово для поиска"
+          placeholder={state.enums.INPUT_KEYWORD_TO_SEARCH}
           id="iconSearchInput"
         />
         <div className={styles.container}>

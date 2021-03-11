@@ -20,7 +20,7 @@ const getSelf = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.user.role !== 'admin') return next({ status: 403, message: 'Forbidden' })
+  if (req.user.role !== 'admin' && JSON.stringify(req.params.id) !== JSON.stringify(req.user.id)) return next({ status: 403, message: 'Forbidden' })
   const { username, password, role, settings } = req.body
   const id = (req.params.id as any) as Schema.Types.ObjectId
   try {

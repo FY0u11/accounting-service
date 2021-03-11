@@ -1,5 +1,6 @@
 import { actions, ActionsTypes } from '../actions'
 import ru                        from '../../localization/ru'
+import en                        from '../../localization/en'
 import { Types }                 from '../../types'
 
 export const initialState: Types.State = {
@@ -45,6 +46,7 @@ export const reducer = (state: Types.State = initialState, action: ActionsTypes<
     case 'SET_PTYPES':                               return { ...state, ptypes: action.ptypes }
     case 'SET_USER_SETTINGS':                        return { ...state, user: { ...state.user, settings: { ...state.user.settings, ...action.settings } } }
     case 'CLEAR_STATE': { state.user.socket.close(); return initialState }
+    case 'SET_ENUMS':                                return { ...state, enums: action.lang === 'English' ? en : action.lang === 'Русский' ? ru : ru }
     default:                                         return state
   }
 }

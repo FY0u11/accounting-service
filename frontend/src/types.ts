@@ -68,6 +68,7 @@ export namespace Types {
   }
   export type UserSettings = {
     showAllPayments?: boolean
+    lang?           : 'English' | 'Русский'
   }
   export type Enums = typeof ru
   export type State = {

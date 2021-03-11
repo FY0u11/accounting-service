@@ -96,6 +96,11 @@ const App = ({ Component, pageProps }: AppProps) => {
     })()
   }, [state.user.settings.showAllPayments])
 
+  useEffect(() => {
+    if (!state.user.settings.lang) return
+    setState(actions.setEnums(state.user.settings.lang))
+  }, [state.user.settings.lang])
+
   return (
     <AppContext.Provider
       value={{

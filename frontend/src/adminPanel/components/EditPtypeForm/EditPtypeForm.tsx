@@ -1,6 +1,7 @@
-import { useEffect }                      from 'react'
+import { useContext, useEffect }          from 'react'
 
 import { Button, ModalWindow, TextInput } from 'components'
+import { AppContext }                     from '../../../context/AppContext'
 import styles                             from '../../../pages/admin/Admin.module.css'
 import { Types }                          from '../../../types'
 
@@ -19,6 +20,8 @@ const EditPtypeForm = ({
   setEditedPtype,
   confirmEdit
 }: EditPtypeFormProps) => {
+  const { state } = useContext(AppContext)
+
   useEffect(() => {
     if (isEditModalOpened) {
       document.getElementById('updatePtypeNameForm').focus()
@@ -29,22 +32,22 @@ const EditPtypeForm = ({
     <ModalWindow
       isModalOpened={isEditModalOpened}
       setIsModalOpened={setIsEditModalOpened}
-      title="Изменить наименование платежей"
+      title={state.enums.CHANGE_PAYMENT_TYPE_NAME}
     >
       <form className={styles.edit}>
         <div>
-          <label htmlFor="updatePtypeNameForm">Введите новое название платежей:</label>
+          <label htmlFor="updatePtypeNameForm">{state.enums.ADD_NEW_PAYMENT_TYPE_NAME}:</label>
           <TextInput
             type="text"
             value={editedPtype.name}
             onChangeHandler={name => setEditedPtype({ ...editedPtype, name })}
             id="updatePtypeNameForm"
-            placeholder="Название платежей"
+            placeholder={state.enums.PAYMENT_TYPE}
           />
         </div>
         <div style={{ marginTop: '1rem' }}>
           <Button onClick={confirmEdit} disabled={!editedPtype.name.trim()}>
-            Изменить
+            {state.enums.UPDATE}
           </Button>
         </div>
       </form>

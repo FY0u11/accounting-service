@@ -13,6 +13,7 @@ const clearState           = ()                              => ({ type: 'CLEAR_
 const setIsLoading         = (isLoading: boolean)            => ({ type: 'SET_IS_LOADING', isLoading }               as const)
 const setPtypes            = (ptypes: Types.Ptype[])         => ({ type: 'SET_PTYPES', ptypes }                      as const)
 const setUserSettings      = (settings: Types.UserSettings)  => ({ type: 'SET_USER_SETTINGS', settings }             as const)
+const setEnums             = (lang: 'English' | 'Русский')   => ({ type: 'SET_ENUMS', lang }                         as const)
 
 export const actions = {
   setAppMonths,
@@ -27,7 +28,8 @@ export const actions = {
   clearState,
   setIsLoading,
   setPtypes,
-  setUserSettings
+  setUserSettings,
+  setEnums
 }
 
 export type ActionsTypes<T> = T extends { [key: string]: (...args: unknown[]) => infer U } ? U : never

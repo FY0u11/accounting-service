@@ -18,33 +18,33 @@ const Auth = () => {
   return (
     <>
       {!state.user.token ? (
-        <Layout title="Авторизация">
+        <Layout title={state.enums.AUTHORIZATION}>
           <div className={styles.wrapper}>
             <form className={styles.container}>
-              <h2>Авторизация</h2>
+              <h2>{state.enums.AUTHORIZATION}</h2>
               <label htmlFor="username">
-                <span>Введите имя пользователя:</span>
+                <span>{state.enums.INPUT_USERNAME}:</span>
                 <input
                   type="text"
                   id="username"
-                  placeholder="Имя пользователя"
+                  placeholder={state.enums.USERNAME}
                   value={form.username}
                   onChange={e => setForm({ ...form, username: e.target.value })}
                 />
               </label>
               <label htmlFor="password">
-                <span>Введите пароль:</span>
+                <span>{state.enums.INPUT_PASSWORD}:</span>
                 <input
                   type="password"
                   id="password"
-                  placeholder="Пароль"
+                  placeholder={state.enums.PASSWORD}
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
                 />
               </label>
               <div>
                 <Button onClick={login} disabled={isLoading || !form.username || !form.password}>
-                  Войти
+                  {state.enums.LOGIN}
                 </Button>
               </div>
             </form>

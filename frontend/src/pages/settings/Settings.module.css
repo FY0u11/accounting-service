@@ -1,3 +1,17 @@
 .show_all_payments {
     margin: 2rem 0;
 }
+
+.lang {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.lang > p {
+    margin-right: 2rem;
+}
+
+.lang_select {
+    flex-basis: 260px;
+}

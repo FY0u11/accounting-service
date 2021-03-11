@@ -2,7 +2,7 @@ import { useRouter }              from 'next/router'
 import React, { useContext }      from 'react'
 
 import { updateUserApi }             from 'api'
-import { Button, Layout, Switch } from 'components'
+import { Button, CustomSelect, Layout, Switch } from 'components'
 import { useApi }                 from 'hooks'
 import styles                     from './Settings.module.css'
 import { AppContext }             from '../../context/AppContext'
@@ -13,13 +13,19 @@ const Settings = () => {
   const router              = useRouter()
   const { request }         = useApi()
 
-  const updateUserHandler = async () => {
+  const updateUserHandler = async (type: 'lang' | 'sap', value?: unknown) => {
     try {
+      let settings = {}
+      if (type === 'sap' ) {
+        settings = { ...state.user.settings, showAllPayments: !state.user.settings.showAllPayments }
+      } else if (type === 'lang') {
+        settings = { ...state.user.settings, lang: value }
+      }
       await request(updateUserApi, {
         _id: state.user._id,
-        settings: JSON.stringify({ ...state.user.settings, showAllPayments: !state.user.settings.showAllPayments })
+        settings: JSON.stringify(settings)
       })
-      setState(actions.setUserSettings({ showAllPayments: !state.user.settings.showAllPayments }))
+      setState(actions.setUserSettings(settings))
     } catch {
       return
     }
@@ -33,12 +39,12 @@ const Settings = () => {
           <>
             <p className={styles.show_all_payments}>
               {state.user.settings.showAllPayments}
-              Показывать платежи от всех пользователей?{' '}
+              {state.enums.SHOW_ALL_PAYMENTS}{' '}
               <Switch
-                yes="Да"
-                no="Нет"
+                yes={state.enums.YES}
+                no={state.enums.NO}
                 checked={state.user.settings.showAllPayments || false}
-                checkHandler={updateUserHandler}
+                checkHandler={() => updateUserHandler('sap')}
               />
             </p>
             <p>
@@ -46,6 +52,17 @@ const Settings = () => {
             </p>
           </>
         ) : null}
+        <div className={styles.lang}>
+          <p>{state.enums.CHANGE_LANGUAGE}:</p>
+          <div className={styles.lang_select}>
+            <CustomSelect
+              values={['English', 'Русский']}
+              title={state.enums.SELECT_LANGUAGE}
+              selectedValue={state.user.settings.lang ?? 'Русский'}
+              onChangeHandler={lang => updateUserHandler('lang', lang)}
+            />
+          </div>
+        </div>
       </div>
     </Layout>
   )

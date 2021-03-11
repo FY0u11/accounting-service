@@ -1,7 +1,8 @@
-import { useEffect }                                    from 'react'
+import { useContext, useEffect }                        from 'react'
 
 import { Button, CustomSelect, ModalWindow, TextInput } from 'components'
 import { verifyPassword, verifyUsername }               from 'utils'
+import { AppContext }                                   from '../../../context/AppContext'
 import styles                                           from '../../../pages/admin/Admin.module.css'
 import { Types }                                        from '../../../types'
 
@@ -20,6 +21,8 @@ const EditUserForm = ({
   setEditedUser,
   confirmEdit
 }: EditUserFormProps) => {
+  const { state } = useContext(AppContext)
+
   useEffect(() => {
     if (isEditModalOpened) {
       document.getElementById('usernameInput').focus()
@@ -30,11 +33,11 @@ const EditUserForm = ({
     <ModalWindow
       isModalOpened={isEditModalOpened}
       setIsModalOpened={setIsEditModalOpened}
-      title="Редактирование данных пользователя"
+      title={state.enums.USER_EDITING}
     >
       <form className={styles.edit}>
         <div>
-          <label htmlFor="usernameInput">Введите новое имя пользователя:</label>
+          <label htmlFor="usernameInput">{state.enums.ADD_NEW_USERNAME}:</label>
           <TextInput
             type="text"
             value={editedUser.username}
@@ -43,11 +46,11 @@ const EditUserForm = ({
               setEditedUser({ ...editedUser, username })
             }}
             id="usernameInput"
-            placeholder="Имя пользователя"
+            placeholder={state.enums.USERNAME}
           />
         </div>
         <div>
-          <label htmlFor="passwordInput">Введите новый пароль:</label>
+          <label htmlFor="passwordInput">{state.enums.ADD_NEW_PASSWORD}:</label>
           <TextInput
             type="password"
             value={editedUser.password}
@@ -56,18 +59,18 @@ const EditUserForm = ({
               setEditedUser({ ...editedUser, password })
             }}
             id="passwordInput"
-            placeholder="Пароль"
+            placeholder={state.enums.PASSWORD}
           />
         </div>
         <CustomSelect
           values={['user', 'admin']}
           onChangeHandler={role => setEditedUser({ ...editedUser, role: role as 'user' | 'admin' })}
           selectedValue={editedUser.role}
-          title="Выберите роль пользователя"
-          label="Изменить роль:"
+          title={state.enums.SELECT_NEW_ROLE}
+          label={state.enums.UPDATE_ROLE}
         />
         <div>
-          <Button onClick={confirmEdit}>Изменить</Button>
+          <Button onClick={confirmEdit}>{state.enums.UPDATE}</Button>
         </div>
       </form>
     </ModalWindow>
