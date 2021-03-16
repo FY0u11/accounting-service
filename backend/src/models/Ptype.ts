@@ -29,4 +29,4 @@ schema.pre('save', { document: true }, async function (next) {
   next()
 })
 
-export const Ptype = model('ptype', schema)
+export const Ptype = model<PtypeDoc>('ptype', schema)

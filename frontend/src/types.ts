@@ -36,6 +36,7 @@ export namespace Types {
   export type PaymentForCreate = {
     ptype           : string
     value           : number
+    time?           : Date
   }
   export type SetState<T> = Dispatch<SetStateAction<T>>
   export type Sorting = {

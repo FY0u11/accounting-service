@@ -40,4 +40,4 @@ schema.pre('deleteOne', { document: true }, async function () {
   ptype.save()
 })
 
-export const Payment = model('payment', schema)
+export const Payment = model<PaymentDoc>('payment', schema)
