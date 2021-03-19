@@ -15,6 +15,6 @@ export const authService = async (user: UserDoc) => {
     }
   const tokenSecret = process.env.SECRET || ''
   return sign({ id: candidate._id, username: candidate.username, role: candidate.role }, tokenSecret, {
-    expiresIn: '8h'
+    expiresIn: '30d'
   })
 }
